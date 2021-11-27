@@ -7,6 +7,15 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 
 
+def reload(this_driver, page_to_reload):
+    this_driver.implicitly_wait(5)
+    this_driver.get(page_to_reload)
+    time.sleep(1)
+    this_driver.find_element(By.ID, "gsc_bpf_more").click()
+    time.sleep(1)
+    this_driver.find_element(By.ID, "gsc_bpf_more").click()
+    time.sleep(1)
+
 def setup_driver():
     so = platform.system()
     print("Il sistema operativo è: " + so)
@@ -56,3 +65,27 @@ if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
     time.sleep(2)
     driver.find_element(By.ID, "gsc_bpf_more").click()
     time.sleep(2)
+
+
+    
+    #prelievo dell'URL della pagina corrente
+    principal_page = driver.current_url
+
+    #prelievo dei file PDF da ogni singolo articolo
+    for (year_row, title_row) in zip(list_years, list_titles):
+        if int(year_row) >= 2015:
+            try:
+                driver.implicitly_wait(10)
+                driver.find_element(By.LINK_TEXT, title_row).click()
+                driver.implicitly_wait(10)
+                time.sleep(2)
+                driver.find_element(By.PARTIAL_LINK_TEXT, "PDF").click()
+                time.sleep(2)
+                driver.implicitly_wait(10)
+                time.sleep(2)
+                reload(driver, principal_page)
+            except:
+                print("Eccezione sul titolo " + title_row)
+                driver.implicitly_wait(10)
+                reload(driver, principal_page)
+        time.sleep(2)
