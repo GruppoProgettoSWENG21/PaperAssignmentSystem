@@ -66,7 +66,21 @@ if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
     driver.find_element(By.ID, "gsc_bpf_more").click()
     time.sleep(2)
 
+    # si prendono tutte le righe della tabella e per ognuna di esse si va a prelevare il titolo e l'anno di pubblicazione
+    # che verranno inseriti nelle apposite liste
 
+    table_id = driver.find_element(By.ID, 'gsc_a_t')
+    rows = table_id.find_elements(By.CLASS_NAME, "gsc_a_tr")  # get all of the rows in the table
+    list_years = []
+    list_titles = []
+    for row in rows:
+
+        # Get the columns (all the column 2)
+        year = row.find_elements(By.CLASS_NAME, "gsc_a_y")  # note: index start from 0, 1 is col 2
+        if int(year[0].text) >= 2015:
+            list_years.append(year[0].text)
+            title = row.find_elements(By.CLASS_NAME, "gsc_a_at")
+            list_titles.append(title[0].text)
     
     #prelievo dell'URL della pagina corrente
     principal_page = driver.current_url
