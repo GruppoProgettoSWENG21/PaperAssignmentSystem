@@ -82,10 +82,10 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
 
             parsed_pdf = parser.from_file(path + file_name)
             output = parsed_pdf['content']
-            output = output.encode('utf-8', errors='ignore')
+
 
             with open('output.txt', 'w') as the_file:
-                the_file.write(str(output.lower()))
+                if output: the_file.write(str(output.lower().encode('utf8', errors='ignore')))
 
             file_output = open("output.txt", "r", encoding="utf8").readline()
             file_output = text_preproc(file_output)
