@@ -12,10 +12,10 @@ from nltk.stem import snowball
 
 
 def text_preproc(x):
-    x = x.replace("xbd", " ").replace("xef", " ").replace("xbf", " ").replace(".", " ").replace(":", " ").replace("\\n",
-                                                                                                                  " ").replace(
-        "\\xc2\\xb7", " ").replace("\t", " ").replace("\\", " ").replace("\\xe2", " ").replace("\\x94", " ").replace(
-        "\\x80", " ")
+    x = x.replace("xbd", " ").replace("xef", " ").replace("xbf", " ") \
+        .replace(".", " ").replace(":", " ").replace("\\n"," ") \
+        .replace("\\xc2\\xb7", " ").replace("\t", " ").replace("\\", " ") \
+        .replace("\\xe2", " ").replace("\\x94", " ").replace("\\x80", " ")
     x = x.lower()  # all lowercase
     x = x.encode('ascii', 'ignore').decode()  # Encoding
     x = re.sub(r'https*\S+', ' ', x)  # Remove mentions
@@ -33,7 +33,8 @@ def my_tokenizer(text):
     sw = stopwords.words('english')
     stemmer = snowball.SnowballStemmer(language="english")
     tokens = word_tokenize(text)
-    pruned = [stemmer.stem(t.lower()) for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
+    pruned = [stemmer.stem(t.lower()) \
+              for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
     return pruned
 
 
@@ -94,7 +95,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
                 titl = re.findall('^.{0,120}', file_output)
                 titles[file_name] = titl[0]
                 if "abstract" in file_output[:1000]:
-                    if ("keywords" in file_output) and not ("index terms" in file_output):
+                    if "keywords" in file_output and not "index terms" in file_output:
                         abstr = re.findall('abstract(.*?)keywords', file_output)
                         title_abstract[file_name] = abstr[0] + titl[0]
                         keyw = re.findall('keywords(.*?)introduction', file_output)
@@ -116,7 +117,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
                         print(file_name)
 
                 elif "summary" in file_output[:1000]:
-                    if ("keywords" in file_output) and not ("index terms" in file_output):
+                    if "keywords" in file_output and not "index terms" in file_output:
                         abstr = re.findall('summary(.*?)keywords', file_output)
                         title_abstract[file_name] = abstr[0] + titl[0]
                         keyw = re.findall('keywords(.*?)introduction', file_output)
