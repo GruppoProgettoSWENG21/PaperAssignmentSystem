@@ -17,25 +17,28 @@ def reload(this_driver, page_to_reload):
 
 
 def find_path():
+
+    path = ""
     so = platform.system()
     print("Il sistema operativo è: " + so)
 
     username = getpass.getuser()
     print("L'utente è: " + username)
 
-    if (so == "Windows"):
+    if so == "Windows":
         path = "C:\\Users\\" + username + "\\Desktop\\FilePDF\\"
         print(path)
-    elif (so == "Mac OS X"):
+    elif so == "Mac OS X":
         path = "/Users/" + username + "/Desktop"
         print(path)
-    elif (so == "Linux"):
+    elif so == "Linux":
         path = "/home/" + username + "/Desktop"
 
     return path
 
     
 def setup_driver():
+
 
     path = find_path()
     options = webdriver.ChromeOptions()
@@ -102,7 +105,9 @@ if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
                 driver.implicitly_wait(10)
                 time.sleep(2)
                 reload(driver, principal_page)
+
             except:
+
                 print("Eccezione sul titolo " + title_row)
                 driver.implicitly_wait(10)
                 reload(driver, principal_page)
