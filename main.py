@@ -6,7 +6,6 @@ from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 
-
 def reload(this_driver, page_to_reload):
     this_driver.implicitly_wait(5)
     this_driver.get(page_to_reload)
@@ -16,7 +15,8 @@ def reload(this_driver, page_to_reload):
     this_driver.find_element(By.ID, "gsc_bpf_more").click()
     time.sleep(1)
 
-def setup_driver():
+
+def find_path():
     so = platform.system()
     print("Il sistema operativo è: " + so)
 
@@ -24,7 +24,7 @@ def setup_driver():
     print("L'utente è: " + username)
 
     if (so == "Windows"):
-        path = "C:\\Users\\" + username + "\\Desktop\\FilePDF"
+        path = "C:\\Users\\" + username + "\\Desktop\\FilePDF\\"
         print(path)
     elif (so == "Mac OS X"):
         path = "/Users/" + username + "/Desktop"
@@ -32,6 +32,12 @@ def setup_driver():
     elif (so == "Linux"):
         path = "/home/" + username + "/Desktop"
 
+    return path
+
+    
+def setup_driver():
+
+    path = find_path()
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
@@ -48,8 +54,6 @@ def setup_driver():
     driver = webdriver.Chrome(service=service, options=options)
 
     return driver
-
-
 
 if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
 

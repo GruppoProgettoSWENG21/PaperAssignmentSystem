@@ -1,12 +1,15 @@
 import re
+import os
 import numpy as np
+import main
+from selenium import webdriver
+from tika import parser
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import snowball
 
-#ROBERTO
 
 def text_preproc(x):
     x = x.replace("xbd", " ").replace("xef", " ").replace("xbf", " ").replace(".", " ").replace(":", " ").replace("\\n",
@@ -63,3 +66,84 @@ def jaccard_similarity(doc1, doc2):
     # Calculate Jaccard similarity score
     # using length of intersection set divided by length of union set
     return float(len(intersection)) / len(union)
+
+
+
+if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA SOMIGLIANZA
+
+    title_abstract = {}
+    keywords = {}
+    titles = {}
+
+    path = main.find_path()
+    # for per il prelievo di titolo abstract e keywords
+    for file_PDF, sub_directory, files in os.walk(path, followlinks=True):
+        for file_name in files:
+
+            parsed_pdf = parser.from_file(path + file_name)
+            output = parsed_pdf['content']
+            output = output.encode('utf-8', errors='ignore')
+
+            with open('output.txt', 'w') as the_file:
+                the_file.write(str(output.lower()))
+
+            file_output = open("output.txt", "r", encoding="utf8").readline()
+            file_output = text_preproc(file_output)
+
+            try:
+                titl = re.findall('^.{0,120}', file_output)
+                titles[file_name] = titl[0]
+                if "abstract" in file_output[:1000]:
+                    if ("keywords" in file_output) and not ("index terms" in file_output):
+                        abstr = re.findall('abstract(.*?)keywords', file_output)
+                        title_abstract[file_name] = abstr[0] + titl[0]
+                        keyw = re.findall('keywords(.*?)introduction', file_output)
+                        keywords[file_name] = keyw[0]
+
+                    elif "index terms" in file_output:
+                        abstr = re.findall('abstract(.*?)index terms', file_output)
+                        title_abstract[file_name] = abstr[0] + titl[0]
+                        keyw = re.findall('index terms(.*?)introduction', file_output)
+                        keywords[file_name] = keyw[0]
+
+                    elif "introduction" in file_output:
+                        abstr = re.findall('abstract(.*?)introduction', file_output)
+                        title_abstract[file_name] = abstr[0] + titl[0]
+                        keywords[file_name] = " "
+
+                    else:
+                        print("Non funziona")
+                        print(file_name)
+
+                elif "summary" in file_output[:1000]:
+                    if ("keywords" in file_output) and not ("index terms" in file_output):
+                        abstr = re.findall('summary(.*?)keywords', file_output)
+                        title_abstract[file_name] = abstr[0] + titl[0]
+                        keyw = re.findall('keywords(.*?)introduction', file_output)
+                        keywords[file_name] = keyw[0]
+
+                    elif "index terms" in file_output:
+                        abstr = re.findall('summary(.*?)index terms', file_output)
+                        title_abstract[file_name] = abstr[0] + titl[0]
+                        keyw = re.findall('index terms(.*?)introduction', file_output)
+                        keywords[file_name] = keyw[0]
+
+                    elif "introduction" in file_output:
+                        abstr = re.findall('summary(.*?)introduction', file_output)
+                        title_abstract[file_name] = abstr[0] + titl[0]
+                        keywords[file_name] = " "
+
+                    else:
+                        print("Non trova nulla")
+                        print(file_name)
+
+                else:
+                    abstr = re.findall('(.*?)introduction', file_output)
+                    title_abstract[file_name] = abstr[0] + titl[0]
+                    keywords[file_name] = " "
+
+            except:
+                print("Error in filename " + file_name + str(IOError))
+                continue
+
+    print("EXTRACTION ENDED SUCCESSFULLY")
