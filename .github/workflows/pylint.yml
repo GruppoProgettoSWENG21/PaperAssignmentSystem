@@ -20,5 +20,8 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        python -m pylint --disable=W,E,C,R
+        python -m pylint --disable=W
+        python -m pylint --disable=E
+        python -m pylint --disable=C
+        python -m pylint --disable=R
         pylint `ls -R|grep .py$|xargs`
