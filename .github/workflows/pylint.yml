@@ -21,5 +21,4 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint `ls -R|grep .py$|xargs`
-        disable:
-            - line-too-long
+        pylint --disable=W,C,E,R
