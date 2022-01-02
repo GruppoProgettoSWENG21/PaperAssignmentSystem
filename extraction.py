@@ -147,3 +147,38 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
                 continue
 
     print("EXTRACTION ENDED SUCCESSFULLY")
+
+    # 1) utilizzo della funzione jaccard per le KEYWORDS
+
+    doc2 = "mobile app evolution, user reviews, mining app stores, empirical study"
+
+    for key in sorted(keywords.keys()):
+        string = ""
+        # Creates an array of tokenized documents
+        # texts.append(title_abstract[key])
+        string = string + keywords[key]
+        # print(string)
+        print("KEYWORD")
+        print(jaccard_similarity(string, doc2))
+    print("*****************")
+
+    # 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
+
+    my_abstract = "A major problem with user-written bug reports, indicated by developers and documented by researchers, " \
+                  "is the (lack of high) quality of the reported steps to reproduce the bugs. Low-quality steps to " \
+                  "reproduce lead to excessive manual effort spent on bug triage and resolution. This paper proposes " \
+                  "Euler, an approach that automatically identifies and assesses the quality of the steps to reproduce in " \
+                  "a bug report, providing feedback to the reporters, which they can use to improve the bug report. The " \
+                  "feedback provided by Euler was assessed by external evaluators and the results indicate that Euler " \
+                  "correctly identified 98% of the existing steps to reproduce and 58%of the missing ones, while 73% of " \
+                  "its quality annotations are correct "
+
+    print("ABSTRACT+TITOLI")
+    print(cos_similarity(my_abstract, title_abstract))
+
+    # 3) utilizzo della funzione cosine similarity sul TITOLO
+    my_title = "Who (Self) Admits Technical Debt? Gianmarco Fucci, Fiorella Zampetti University of Sannio, " \
+               "Italy {name.surname }@unisannio.it Alexander Serebrenik Eindhoven University of Technology," \
+               "The netherlandsa.serebrenik@tue.nl Massimiliano Di Penta University of Sannio, Italy dipenta@unisannio.it "
+    print("TITOLI")
+    print(cos_similarity(my_title, titles))
