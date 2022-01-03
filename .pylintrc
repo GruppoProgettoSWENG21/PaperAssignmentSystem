@@ -1,2 +1,2 @@
 [MASTER]
-disable = C,W,E,R # missing-module-docstring
+disable = C,E,R # missing-module-docstring
