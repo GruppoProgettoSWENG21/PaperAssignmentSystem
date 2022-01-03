@@ -106,7 +106,7 @@ if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
                 time.sleep(2)
                 reload(driver, principal_page)
 
-            except TitleException:
+            except:
 
                 print("Eccezione sul titolo " + title_row)
                 driver.implicitly_wait(10)
