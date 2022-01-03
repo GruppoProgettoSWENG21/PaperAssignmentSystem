@@ -1,5 +1,6 @@
 import re
 import os
+import io
 import numpy as np
 import main
 from tika import parser
@@ -83,7 +84,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
             parsed_pdf = parser.from_file(path + file_name)
             output = parsed_pdf['content']
 
-            with open('output.txt', 'w') as the_file:
+            with io.open('output.txt', 'w', encoding='utf8') as the_file:
                 if output:
                     the_file.write(str(output.lower().encode('utf8', errors='ignore')))
 
