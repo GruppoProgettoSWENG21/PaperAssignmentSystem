@@ -1,2 +1,2 @@
 [MASTER]
-disable = C,R # missing-module-docstring
+disable = C,R, W0702 # missing-module-docstring
