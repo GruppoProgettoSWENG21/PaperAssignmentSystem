@@ -13,7 +13,7 @@ from nltk.stem import snowball
 
 def text_preproc(x):
     x = x.replace("xbd", " ").replace("xef", " ").replace("xbf", " ") \
-        .replace(".", " ").replace(":", " ").replace("\\n"," ") \
+        .replace(".", " ").replace(":", " ").replace("\\n", " ") \
         .replace("\\xc2\\xb7", " ").replace("\t", " ").replace("\\", " ") \
         .replace("\\xe2", " ").replace("\\x94", " ").replace("\\x80", " ")
     x = x.lower()  # all lowercase
@@ -67,7 +67,6 @@ def jaccard_similarity(doc1, doc2):
     # Calculate Jaccard similarity score
     # using length of intersection set divided by length of union set
     return float(len(intersection)) / len(union)
-
 
 
 if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA SOMIGLIANZA
@@ -143,7 +142,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
                     title_abstract[file_name] = abstr[0] + titl[0]
                     keywords[file_name] = " "
 
-            except:
+            except IOError:
                 print("Error in filename " + file_name + str(IOError))
                 continue
 
