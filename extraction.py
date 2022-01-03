@@ -142,7 +142,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
                     title_abstract[file_name] = abstr[0] + titl[0]
                     keywords[file_name] = " "
 
-            except IOError:
+            except:
                 print("Error in filename " + file_name + str(IOError))
                 continue
 
