@@ -1,2 +1,2 @@
 [MASTER]
-disable = C0301, # missing-module-docstring
+disable = C # missing-module-docstring
