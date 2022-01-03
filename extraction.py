@@ -2,7 +2,6 @@ import re
 import os
 import numpy as np
 import main
-from selenium import webdriver
 from tika import parser
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
