@@ -53,10 +53,10 @@ def setup_driver():
         "plugins.always_open_pdf_externally": True  # It will not show PDF directly in chrome
     })
     # Optional argument, if not specified will search path.
-    service = ChromeService(executable_path="C:\Program Files (x86)\chromedriver.exe")
-    driver = webdriver.Chrome(service=service, options=options)
+    service = ChromeService(executable_path="C:\\Program Files (x86)\\chromedriver.exe")
+    our_driver = webdriver.Chrome(service=service, options=options)
 
-    return driver
+    return our_driver
 
 if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
 
@@ -106,7 +106,7 @@ if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
                 time.sleep(2)
                 reload(driver, principal_page)
 
-            except:
+            except TitleException:
 
                 print("Eccezione sul titolo " + title_row)
                 driver.implicitly_wait(10)
