@@ -40,9 +40,9 @@ def my_tokenizer(text):
 
 def cos_similarity(input_query, section):
     texts = []
-    for key in sorted(section.keys()):
+    for keys in sorted(section.keys()):
         # Creates an array of tokenized documents
-        texts.append(section[key])
+        texts.append(section[keys])
     vectorizer = CountVectorizer(tokenizer=my_tokenizer)
     # creates the model
     model = vectorizer.fit_transform(texts)
@@ -151,7 +151,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
 
     # 1) utilizzo della funzione jaccard per le KEYWORDS
 
-    doc2 = "mobile app evolution, user reviews, mining app stores, empirical study"
+    document = "mobile app evolution, user reviews, mining app stores, empirical study"
 
     for key in sorted(keywords.keys()):
         string = ""
@@ -160,7 +160,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
         string = string + keywords[key]
         # print(string)
         print("KEYWORD")
-        print(jaccard_similarity(string, doc2))
+        print(jaccard_similarity(string, document))
     print("*****************")
 
     # 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
