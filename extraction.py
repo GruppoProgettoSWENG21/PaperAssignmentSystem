@@ -10,6 +10,12 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import snowball
 
+def crezioneTabella(autori_col, media_t, massimo_t, media_t_a, massimo_t_a, jac_keywords):
+    df = pd.DataFrame(list(zip(autori_col, media_t, massimo_t, media_t_a, massimo_t_a, jac_keywords)),
+                      columns=['AUTORI', 'TITOLI-MAX', 'TITOLI-MEDIA', 'TITOLI+ABSTRACT-MAX', 'TITOLI+ABSTRACT-MEDIA',
+                               'KEYWORDS'])
+    df.to_csv('valoriAssegnazione.csv', sep=';', header=True, index=False)
+
 
 def text_preproc(x):
     x = x.replace("xbd", " ").replace("xef", " ").replace("xbf", " ") \
@@ -191,3 +197,34 @@ for key in sorted(author_keywords.keys()):
 
 print("********************************")
 print()
+
+# 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
+
+print("ABSTRACT+TITOLI")
+media_tit_ab = []
+massimo_tit_ab = []
+for key in sorted(author_title_abstact.keys()):
+    if not "Massimiliano Di Penta" in key:
+        mean, max = cos_similarity(author_title_abstact[key], author_title_abstact["Massimiliano Di Penta"])
+        print(key + " --------> " + str(mean))
+        print(key + " --------> " + str(max))
+        media_tit_ab.append(mean)
+        massimo_tit_ab.append(max)
+
+print("********************************")
+print()
+
+# 3) utilizzo della funzione cosine similarity sul TITOLO
+
+print("TITOLI")
+media_tit = []
+massimo_tit = []
+for key in sorted(author_title_abstact.keys()):
+    if not "Massimiliano Di Penta" in key:
+        mean, max = cos_similarity(author_titles[key], author_titles["Massimiliano Di Penta"])
+        print(key + " --------> " + str(mean))
+        print(key + " --------> " + str(max))
+        media_tit.append(mean)
+        massimo_tit.append(max)
+
+crezioneTabella(autori, media_tit, massimo_tit, media_tit_ab, massimo_tit_ab, massimo_keywords)
