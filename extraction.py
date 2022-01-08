@@ -38,35 +38,70 @@ def my_tokenizer(text):
     return pruned
 
 
+def crezioneTabella(autori_col, media_t, massimo_t, media_t_a, massimo_t_a, jac_keywords):
+    df = pd.DataFrame(list(zip(autori_col, media_t, massimo_t, media_t_a, massimo_t_a, jac_keywords)),
+                      columns=['AUTORI', 'TITOLI-MAX', 'TITOLI-MEDIA', 'TITOLI+ABSTRACT-MAX', 'TITOLI+ABSTRACT-MEDIA',
+                               'KEYWORDS'])
+    df.to_csv('valoriAssegnazione.csv', sep=';', header=True, index=False)
+
+
+def my_tokenizer(text):
+    """Tokenization function"""
+    sw = stopwords.words('english')
+    stemmer = snowball.SnowballStemmer(language="english")
+    tokens = word_tokenize(text)
+    pruned = [stemmer.stem(t.lower()) for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
+    return pruned
+
+
 def cos_similarity(input_query, section):
+    """Funzione di cosine similarity fatta tra la query e i documenti"""
+
     texts = []
-    for keys in sorted(section.keys()):
+    values = []
+
+    for key in sorted(section.keys()):
         # Creates an array of tokenized documents
-        texts.append(section[keys])
-    vectorizer = CountVectorizer(tokenizer=my_tokenizer)
-    # creates the model
-    model = vectorizer.fit_transform(texts)
-    # adds a query to the model
-    query = vectorizer.transform([input_query])
-    cos = cosine_similarity(query, model)
-    print(np.mean(cos))
-    print(np.max(cos))
+        texts.append(section[key])
+    for key_query in sorted(input_query.keys()):
+        vectorizer = CountVectorizer(tokenizer=my_tokenizer)
+        # creates the model
+        model = vectorizer.fit_transform(texts)
+        # adds a query to the model
+        query = vectorizer.transform([input_query[key_query]])
+        cos = cosine_similarity(query, model)
+        values.append(cos)
+
+    media = np.mean(values)
+    massimo = np.max(values)
+
+    return media, massimo
 
 
-def jaccard_similarity(doc1, doc2):
-    # List the unique words in a document
-    words_doc1 = set(doc1.lower().replace(",", "").split())
-    words_doc2 = set(doc2.lower().replace(",", "").split())
+def jaccard_similarity(input_query_key, section_keyword):
+    values_keywords = []
+    for input_key in sorted(input_query_key.keys()):
+        for section_key in sorted(section_keyword.keys()):
+            # List the unique words in a document
+            words_doc1 = set(input_query_key[input_key].lower().replace(",", "").split())
+            words_doc2 = set(section_keyword[section_key].lower().replace(",", "").split())
 
-    # Find the intersection of words list of doc1 & doc2
-    intersection = words_doc1.intersection(words_doc2)
+            # Find the intersection of words list of doc1 & doc2
+            intersection = words_doc1.intersection(words_doc2)
 
-    # Find the union of words list of doc1 & doc2
-    union = words_doc1.union(words_doc2)
+            # Find the union of words list of doc1 & doc2
+            union = words_doc1.union(words_doc2)
 
-    # Calculate Jaccard similarity score
-    # using length of intersection set divided by length of union set
-    return float(len(intersection)) / len(union)
+            # Calculate Jaccard similarity score
+            # using length of intersection set divided by length of union set
+            if not len(union) == 0:
+                values_keywords.append((float(len(intersection)) / len(union)))
+            else:
+                values_keywords.append(0.0)
+
+    massimo_keyword = np.max(values_keywords)
+
+    return massimo_keyword
 
 
 if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA SOMIGLIANZA
