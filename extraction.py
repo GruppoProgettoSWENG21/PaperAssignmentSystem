@@ -38,22 +38,6 @@ def my_tokenizer(text):
     return pruned
 
 
-def crezioneTabella(autori_col, media_t, massimo_t, media_t_a, massimo_t_a, jac_keywords):
-    df = pd.DataFrame(list(zip(autori_col, media_t, massimo_t, media_t_a, massimo_t_a, jac_keywords)),
-                      columns=['AUTORI', 'TITOLI-MAX', 'TITOLI-MEDIA', 'TITOLI+ABSTRACT-MAX', 'TITOLI+ABSTRACT-MEDIA',
-                               'KEYWORDS'])
-    df.to_csv('valoriAssegnazione.csv', sep=';', header=True, index=False)
-
-
-def my_tokenizer(text):
-    """Tokenization function"""
-    sw = stopwords.words('english')
-    stemmer = snowball.SnowballStemmer(language="english")
-    tokens = word_tokenize(text)
-    pruned = [stemmer.stem(t.lower()) for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
-    return pruned
-
-
 def cos_similarity(input_query, section):
     """Funzione di cosine similarity fatta tra la query e i documenti"""
 
@@ -195,3 +179,15 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
             autori.append(author_name)
 
     print("EXTRACTION ENDED SUCCESSFULLY")
+
+
+# 1) utilizzo della funzione jaccard per le KEYWORDS
+massimo_keywords = []
+for key in sorted(author_keywords.keys()):
+    if not "Massimiliano Di Penta" in key:
+        max = jaccard_similarity(author_keywords[key], author_keywords["Massimiliano Di Penta"])
+        print(key + " --------> " + str(max))
+        massimo_keywords.append(max)
+
+print("********************************")
+print()
