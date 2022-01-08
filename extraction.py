@@ -71,114 +71,92 @@ def jaccard_similarity(doc1, doc2):
 
 if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA SOMIGLIANZA
 
-    title_abstract = {}
-    keywords = {}
-    titles = {}
+    autori = []
+    author_title_abstact = {}
+    author_keywords = {}
+    author_titles = {}
 
     path = main.find_path()
     # for per il prelievo di titolo abstract e keywords
     for file_PDF, sub_directory, files in os.walk(path, followlinks=True):
-        for file_name in files:
+        for my_directory in sub_directory:
+            title_abstract = {}
+            keywords = {}
+            titles = {}
+            my_path = path + my_directory + "\\"
+            author_name = my_directory
+            for sub_filePDF, sub_dir, sub_files in os.walk(my_path, followlinks=True):
+                for file_name in sub_files:
 
-            parsed_pdf = parser.from_file(path + file_name)
-            output = parsed_pdf['content']
+                    parsed_pdf = parser.from_file(my_path + file_name)
+                    output = parsed_pdf['content']
 
-            with io.open('output.txt', 'w', encoding='utf8') as the_file:
-                if output:
-                    the_file.write(str(output.lower().encode('utf8', errors='ignore')))
+                    with io.open('output.txt', 'w', encoding='utf8') as the_file:
+                        if output:
+                            the_file.write(str(output.lower().encode('utf8', errors='ignore')))
 
-            file_output = open("output.txt", "r", encoding="utf8").readline()
-            file_output = text_preproc(file_output)
+                    file_output = open("output.txt", "r", encoding="utf8").readline()
+                    file_output = text_preproc(file_output)
 
-            try:
-                titl = re.findall('^.{0,120}', file_output)
-                titles[file_name] = titl[0]
-                if "abstract" in file_output[:1000]:
-                    if "keywords" in file_output and not "index terms" in file_output:
-                        abstr = re.findall('abstract(.*?)keywords', file_output)
-                        title_abstract[file_name] = abstr[0] + titl[0]
-                        keyw = re.findall('keywords(.*?)introduction', file_output)
-                        keywords[file_name] = keyw[0]
+                    try:
+                        titl = re.findall('^.{0,120}', file_output)
+                        titles[file_name] = titl[0]
+                        if "abstract" in file_output[:1000]:
+                            if "keywords" in file_output and not "index terms" in file_output:
+                                abstr = re.findall('abstract(.*?)keywords', file_output)
+                                title_abstract[file_name] = abstr[0] + titl[0]
+                                keyw = re.findall('keywords(.*?)introduction', file_output)
+                                keywords[file_name] = keyw[0]
 
-                    elif "index terms" in file_output:
-                        abstr = re.findall('abstract(.*?)index terms', file_output)
-                        title_abstract[file_name] = abstr[0] + titl[0]
-                        keyw = re.findall('index terms(.*?)introduction', file_output)
-                        keywords[file_name] = keyw[0]
+                            elif "index terms" in file_output:
+                                abstr = re.findall('abstract(.*?)index terms', file_output)
+                                title_abstract[file_name] = abstr[0] + titl[0]
+                                keyw = re.findall('index terms(.*?)introduction', file_output)
+                                keywords[file_name] = keyw[0]
 
-                    elif "introduction" in file_output:
-                        abstr = re.findall('abstract(.*?)introduction', file_output)
-                        title_abstract[file_name] = abstr[0] + titl[0]
-                        keywords[file_name] = " "
+                            elif "introduction" in file_output:
+                                abstr = re.findall('abstract(.*?)introduction', file_output)
+                                title_abstract[file_name] = abstr[0] + titl[0]
+                                keywords[file_name] = " "
 
-                    else:
-                        print("Non funziona")
-                        print(file_name)
+                            else:
+                                print("Non funziona")
+                                print(file_name)
 
-                elif "summary" in file_output[:1000]:
-                    if "keywords" in file_output and not "index terms" in file_output:
-                        abstr = re.findall('summary(.*?)keywords', file_output)
-                        title_abstract[file_name] = abstr[0] + titl[0]
-                        keyw = re.findall('keywords(.*?)introduction', file_output)
-                        keywords[file_name] = keyw[0]
+                        elif "summary" in file_output[:1000]:
+                            if "keywords" in file_output and not "index terms" in file_output:
+                                abstr = re.findall('summary(.*?)keywords', file_output)
+                                title_abstract[file_name] = abstr[0] + titl[0]
+                                keyw = re.findall('keywords(.*?)introduction', file_output)
+                                keywords[file_name] = keyw[0]
 
-                    elif "index terms" in file_output:
-                        abstr = re.findall('summary(.*?)index terms', file_output)
-                        title_abstract[file_name] = abstr[0] + titl[0]
-                        keyw = re.findall('index terms(.*?)introduction', file_output)
-                        keywords[file_name] = keyw[0]
+                            elif "index terms" in file_output:
+                                abstr = re.findall('summary(.*?)index terms', file_output)
+                                title_abstract[file_name] = abstr[0] + titl[0]
+                                keyw = re.findall('index terms(.*?)introduction', file_output)
+                                keywords[file_name] = keyw[0]
 
-                    elif "introduction" in file_output:
-                        abstr = re.findall('summary(.*?)introduction', file_output)
-                        title_abstract[file_name] = abstr[0] + titl[0]
-                        keywords[file_name] = " "
+                            elif "introduction" in file_output:
+                                abstr = re.findall('summary(.*?)introduction', file_output)
+                                title_abstract[file_name] = abstr[0] + titl[0]
+                                keywords[file_name] = " "
 
-                    else:
-                        print("Non trova nulla")
-                        print(file_name)
+                            else:
+                                print("Non trova nulla")
+                                print(file_name)
 
-                else:
-                    abstr = re.findall('(.*?)introduction', file_output)
-                    title_abstract[file_name] = abstr[0] + titl[0]
-                    keywords[file_name] = " "
+                        else:
+                            abstr = re.findall('(.*?)introduction', file_output)
+                            title_abstract[file_name] = abstr[0] + titl[0]
+                            keywords[file_name] = " "
 
-            except:
-                print("Error in filename " + file_name + str(IOError))
-                continue
+                    except:
+                        print("Error in filename " + file_name + str(IOError))
+                        continue
+
+            author_title_abstact[author_name] = title_abstract
+            author_keywords[author_name] = keywords
+            author_titles[author_name] = titles
+            autori.append(author_name)
 
     print("EXTRACTION ENDED SUCCESSFULLY")
-
-    # 1) utilizzo della funzione jaccard per le KEYWORDS
-
-    document = "mobile app evolution, user reviews, mining app stores, empirical study"
-
-    for key in sorted(keywords.keys()):
-        string = ""
-        # Creates an array of tokenized documents
-        # texts.append(title_abstract[key])
-        string = string + keywords[key]
-        # print(string)
-        print("KEYWORD")
-        print(jaccard_similarity(string, document))
-    print("*****************")
-
-    # 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
-
-    my_abstract = "A major problem with user-written bug reports, indicated by developers and documented by researchers, " \
-                  "is the (lack of high) quality of the reported steps to reproduce the bugs. Low-quality steps to " \
-                  "reproduce lead to excessive manual effort spent on bug triage and resolution. This paper proposes " \
-                  "Euler, an approach that automatically identifies and assesses the quality of the steps to reproduce in " \
-                  "a bug report, providing feedback to the reporters, which they can use to improve the bug report. The " \
-                  "feedback provided by Euler was assessed by external evaluators and the results indicate that Euler " \
-                  "correctly identified 98% of the existing steps to reproduce and 58%of the missing ones, while 73% of " \
-                  "its quality annotations are correct "
-
-    print("ABSTRACT+TITOLI")
-    print(cos_similarity(my_abstract, title_abstract))
-
-    # 3) utilizzo della funzione cosine similarity sul TITOLO
-    my_title = "Who (Self) Admits Technical Debt? Gianmarco Fucci, Fiorella Zampetti University of Sannio, " \
-               "Italy {name.surname }@unisannio.it Alexander Serebrenik Eindhoven University of Technology," \
-               "The netherlandsa.serebrenik@tue.nl Massimiliano Di Penta University of Sannio, Italy dipenta@unisannio.it "
-    print("TITOLI")
-    print(cos_similarity(my_title, titles))
