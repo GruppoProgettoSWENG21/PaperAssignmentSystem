@@ -2,6 +2,7 @@ import re
 import os
 import io
 import numpy as np
+import pandas as pd
 import main
 from tika import parser
 from sklearn.feature_extraction.text import CountVectorizer
@@ -101,7 +102,7 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
     author_keywords = {}
     author_titles = {}
 
-    path = main.find_path()
+    path = main.find_path_for_extraction()
     # for per il prelievo di titolo abstract e keywords
     for file_PDF, sub_directory, files in os.walk(path, followlinks=True):
         for my_directory in sub_directory:
@@ -227,4 +228,6 @@ for key in sorted(author_title_abstact.keys()):
         media_tit.append(mean)
         massimo_tit.append(max)
 
-crezioneTabella(autori, media_tit, massimo_tit, media_tit_ab, massimo_tit_ab, massimo_keywords)
+
+autori.remove("Massimiliano Di Penta")
+crezioneTabella(autori, massimo_tit, media_tit, massimo_tit_ab, media_tit_ab, massimo_keywords)

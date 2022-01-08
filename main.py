@@ -17,6 +17,25 @@ def reload(this_driver, page_to_reload):
     this_driver.find_element(By.ID, "gsc_bpf_more").click()
     time.sleep(1)
 
+def find_path_for_extraction():
+    path = ""
+    so = platform.system()
+    print("Il sistema operativo è: " + so)
+
+    username = getpass.getuser()
+    print("L'utente è: " + username)
+
+    if so == "Windows":
+        path = "C:\\Users\\" + username + "\\Desktop\\FilePDF\\"
+        print(path)
+    elif so == "Mac OS X":
+        path = "/Users/" + username + "/Desktop/FilePDF"
+        print(path)
+    elif so == "Linux":
+        path = "/home/" + username + "/Desktop/FilePDF"
+
+    return path
+
 
 def find_path(autore_to_find):
     path = ""
