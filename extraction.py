@@ -209,100 +209,100 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
 
     print("EXTRACTION ENDED SUCCESSFULLY")
 
-pdf_di_penta = []
-for pdf in sorted(author_titles["Massimiliano Di Penta"].keys()):
-    pdf_di_penta.append(pdf)
+    pdf_di_penta = []
+    for pdf in sorted(author_titles["Massimiliano Di Penta"].keys()):
+        pdf_di_penta.append(pdf)
 
-print("********************************")
-print()
-
-
-# 1) utilizzo della funzione jaccard per le KEYWORDS
-
-massimo_keywords = {}
-
-for nome_autore in sorted(author_keywords.keys()):
-    if not "Massimiliano Di Penta" in nome_autore:
-        valori_massimi = jaccard_similarity(author_keywords[nome_autore], author_keywords["Massimiliano Di Penta"])
-        massimo_keywords.update({nome_autore: valori_massimi})
+    print("********************************")
+    print()
 
 
-autori_keywords = {}
-val_max_keywords_tabella = []
+    # 1) utilizzo della funzione jaccard per le KEYWORDS
 
-for pdf in sorted(pdf_di_penta):
-    print(pdf)
-    for autore in sorted(autori):
-        if not "Massimiliano Di Penta" in autore:
-            print(autore + " -----> " + str(massimo_keywords[autore][pdf]))
-            val_max_keywords_tabella.append(massimo_keywords[autore][pdf])
-    autori_keywords.update({pdf: val_max_keywords_tabella})
+    massimo_keywords = {}
+
+    for nome_autore in sorted(author_keywords.keys()):
+        if not "Massimiliano Di Penta" in nome_autore:
+            valori_massimi = jaccard_similarity(author_keywords[nome_autore], author_keywords["Massimiliano Di Penta"])
+            massimo_keywords.update({nome_autore: valori_massimi})
+
+
+    autori_keywords = {}
     val_max_keywords_tabella = []
-    print("<---------------------------------------------------->")
 
-print("********************************")
-print()
-# 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
+    for pdf in sorted(pdf_di_penta):
+        print(pdf)
+        for autore in sorted(autori):
+            if not "Massimiliano Di Penta" in autore:
+                print(autore + " -----> " + str(massimo_keywords[autore][pdf]))
+                val_max_keywords_tabella.append(massimo_keywords[autore][pdf])
+        autori_keywords.update({pdf: val_max_keywords_tabella})
+        val_max_keywords_tabella = []
+        print("<---------------------------------------------------->")
 
-print("ABSTRACT+TITOLI")
+    print("********************************")
+    print()
+    # 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
 
-massimo_tit_ab = {}
+    print("ABSTRACT+TITOLI")
 
-for nome_autore in sorted(author_title_abstact.keys()):
-    if not "Massimiliano Di Penta" in nome_autore:
-        valori_massimi = cos_similarity(author_title_abstact[nome_autore], author_title_abstact["Massimiliano Di Penta"])
-        massimo_tit_ab.update({nome_autore: valori_massimi})
+    massimo_tit_ab = {}
 
-autori_tit_ab = {}
-val_max_tit_ab_tabella = []
+    for nome_autore in sorted(author_title_abstact.keys()):
+        if not "Massimiliano Di Penta" in nome_autore:
+            valori_massimi = cos_similarity(author_title_abstact[nome_autore], author_title_abstact["Massimiliano Di Penta"])
+            massimo_tit_ab.update({nome_autore: valori_massimi})
 
-for pdf in sorted(pdf_di_penta):
-    print(pdf)
-    for autore in sorted(autori):
-        if not "Massimiliano Di Penta" in autore:
-            print(autore + " -----> " + str(np.max(massimo_tit_ab[autore][pdf])))
-            val_max_tit_ab_tabella.append(float(np.max(massimo_tit_ab[autore][pdf])))
-    autori_tit_ab.update({pdf: val_max_tit_ab_tabella})
+    autori_tit_ab = {}
     val_max_tit_ab_tabella = []
-    print("<---------------------------------------------------->")
 
-print("********************************")
-print()
+    for pdf in sorted(pdf_di_penta):
+        print(pdf)
+        for autore in sorted(autori):
+            if not "Massimiliano Di Penta" in autore:
+                print(autore + " -----> " + str(np.max(massimo_tit_ab[autore][pdf])))
+                val_max_tit_ab_tabella.append(float(np.max(massimo_tit_ab[autore][pdf])))
+        autori_tit_ab.update({pdf: val_max_tit_ab_tabella})
+        val_max_tit_ab_tabella = []
+        print("<---------------------------------------------------->")
 
-# 3) utilizzo della funzione cosine similarity sul TITOLO
+    print("********************************")
+    print()
 
-print("TITOLI")
+    # 3) utilizzo della funzione cosine similarity sul TITOLO
 
-massimo_tit = {}
+    print("TITOLI")
 
-for nome_autore in sorted(author_titles.keys()):
-    if not "Massimiliano Di Penta" in nome_autore:
-        valori_massimi = cos_similarity(author_titles[nome_autore], author_titles["Massimiliano Di Penta"])
-        massimo_tit.update({nome_autore: valori_massimi})
+    massimo_tit = {}
 
-autori_titoli = {}
-val_max_tit_tabella = []
+    for nome_autore in sorted(author_titles.keys()):
+        if not "Massimiliano Di Penta" in nome_autore:
+            valori_massimi = cos_similarity(author_titles[nome_autore], author_titles["Massimiliano Di Penta"])
+            massimo_tit.update({nome_autore: valori_massimi})
 
-for pdf in pdf_di_penta:
-    print(pdf)
-    for autore in sorted(autori):
-        if not "Massimiliano Di Penta" in autore:
-            print(autore + " -----> " + str(np.max(massimo_tit[autore][pdf])))
-            val_max_tit_tabella.append(float(np.max(massimo_tit[autore][pdf])))
-    autori_titoli.update({pdf: val_max_tit_tabella})
+    autori_titoli = {}
     val_max_tit_tabella = []
 
-print("<---------------------------------------------------->")
+    for pdf in pdf_di_penta:
+        print(pdf)
+        for autore in sorted(autori):
+            if not "Massimiliano Di Penta" in autore:
+                print(autore + " -----> " + str(np.max(massimo_tit[autore][pdf])))
+                val_max_tit_tabella.append(float(np.max(massimo_tit[autore][pdf])))
+        autori_titoli.update({pdf: val_max_tit_tabella})
+        val_max_tit_tabella = []
+
+    print("<---------------------------------------------------->")
+
+    
+    autori.remove("Massimiliano Di Penta")
+
+    for pdf in pdf_di_penta:
+        crezioneTabella(pdf, autori, autori_titoli[pdf], autori_tit_ab[pdf], autori_keywords[pdf])
 
 
-autori.remove("Massimiliano Di Penta")
-
-for pdf in pdf_di_penta:
-    crezioneTabella(pdf, autori, autori_titoli[pdf], autori_tit_ab[pdf], autori_keywords[pdf])
 
 
 
-
-
-autori.remove("Massimiliano Di Penta")
-crezioneTabella(autori, massimo_tit, media_tit, massimo_tit_ab, media_tit_ab, massimo_keywords)
+    autori.remove("Massimiliano Di Penta")
+    crezioneTabella(autori, massimo_tit, media_tit, massimo_tit_ab, media_tit_ab, massimo_keywords)
