@@ -299,10 +299,3 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
 
     for pdf in pdf_di_penta:
         crezioneTabella(pdf, autori, autori_titoli[pdf], autori_tit_ab[pdf], autori_keywords[pdf])
-
-
-
-
-
-    autori.remove("Massimiliano Di Penta")
-    crezioneTabella(autori, massimo_tit, media_tit, massimo_tit_ab, media_tit_ab, massimo_keywords)
