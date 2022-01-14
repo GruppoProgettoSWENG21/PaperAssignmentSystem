@@ -55,19 +55,5 @@ class TestClass(unittest.TestCase):
 
         assert my_tokenizer(words1) == words2
 
-    def test_find_path_for_extraction(self):
-
-        path = "C:\\Users\\Donat\\Desktop\\FilePDF\\"
-
-        assert find_path_for_extraction() == path
-
-    def test_find_path(self):
-        
-        autore = "Massimiliano Di Penta"
-        
-        path = "C:\\Users\\Donat\\Desktop\\FilePDF\\Massimiliano Di Penta"
-
-        assert find_path(autore) == path
-
 if __name__ == '__main__':
     unittest.main()
