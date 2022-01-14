@@ -4,6 +4,8 @@ import platform
 import getpass
 import io
 import numpy as np
+import nltk
+nltk.download('stopwords')
 import pandas as pd
 from tika import parser
 from sklearn.feature_extraction.text import CountVectorizer
