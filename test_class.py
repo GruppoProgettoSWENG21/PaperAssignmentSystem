@@ -57,7 +57,7 @@ class TestClass(unittest.TestCase):
 
     def test_find_path_for_extraction(self):
 
-        path = "C:\\Users\\franc\\Desktop\\FilePDF\\"
+        path = "C:\\Users\\Donat\\Desktop\\FilePDF\\"
 
         assert find_path_for_extraction() == path
 
@@ -65,7 +65,7 @@ class TestClass(unittest.TestCase):
         
         autore = "Massimiliano Di Penta"
         
-        path = "C:\\Users\\franc\\Desktop\\FilePDF\\Massimiliano Di Penta"
+        path = "C:\\Users\\Donat\\Desktop\\FilePDF\\Massimiliano Di Penta"
 
         assert find_path(autore) == path
 
