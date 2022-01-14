@@ -49,38 +49,11 @@ class TestClass(unittest.TestCase):
 
         assert my_tokenizer(words1) == words2
 
-    '''
-    def test_cos_similarity(self):
-        dict3 = {}
-        abstract1 =  "  In recent software development and distribution scenarios, \
-                            app stores are playing a major role, especially for mobile apps. \
-                            On one hand, app stores allow continuous releases of app updates. \
-                            On the other hand, they have become the premier \
-                            point of interaction between app providers and users."
+    def test_find_path_for_extraction(self):
 
-        abstract = re.findall('recent(.*?)providers', abstract1)
+        path = "C:\\Users\\Donat\\Desktop\\FilePDF\\"
 
-        dict1 = {"Pdf1": abstract[0]}
-
-
-        abstract2 = "  Online shopping is one of the most important \
-                            applications on the Internet and it is one that has been steadily \
-                            growing over the last decade. With increasing numbers of online \
-                            shopping transactions there are also raising concerns over privacy \
-                            and protection of the customer data collected by the webshops. \
-                            This is why, we need privacy-preserving technologies for online \
-                            shopping, in the interest of both users and businesses."
-
-
-        abstact3 = re.findall('shopping(.*?)users', abstract2)
-
-
-        dict2 = {"Pdf3": abstact3[0]}
-
-        dict3.update({"Pdf3": 0.18257419})
-
-        assert cos_similarity(dict1, dict2) == dict3
-    '''
+        assert find_path_for_extraction() == path
 
 if __name__ == '__main__':
     unittest.main()
