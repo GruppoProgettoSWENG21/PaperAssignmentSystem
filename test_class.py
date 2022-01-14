@@ -1,7 +1,7 @@
 # content of test_class.py
 import unittest
-from extraction import text_preproc, jaccard_similarity, my_tokenizer, cos_similarity, find_path_for_extraction
-
+from extraction import text_preproc, jaccard_similarity, my_tokenizer, find_path_for_extraction
+from main import find_path
 
 class TestClass(unittest.TestCase):
 
@@ -18,7 +18,10 @@ class TestClass(unittest.TestCase):
         x10 = "\\xe2"
         x11 = "\\x94"
         x12 = "\\x80"
-        x13 = "CIAO"
+        x13 = "CIAO   1"
+        x14 = "https://www.google.it/"
+        x15 = "#software@"
+        x16 = "'f for"
 
         assert text_preproc(x1) == " "
         assert text_preproc(x2) == " "
@@ -32,7 +35,10 @@ class TestClass(unittest.TestCase):
         assert text_preproc(x10) == " "
         assert text_preproc(x11) == " "
         assert text_preproc(x12) == " "
-        assert text_preproc(x13) == "ciao"
+        assert text_preproc(x13) == "ciao "
+        assert text_preproc(x14) == " //www google it/"
+        assert text_preproc(x15) == " "
+        assert text_preproc(x16) == " for"
 
     def test_jaccard_similarity(self):
 
@@ -54,6 +60,14 @@ class TestClass(unittest.TestCase):
         path = "C:\\Users\\Donat\\Desktop\\FilePDF\\"
 
         assert find_path_for_extraction() == path
+
+    def test_find_path(self):
+        
+        autore = "Massimiliano Di Penta"
+        
+        path = "C:\\Users\\Donat\\Desktop\\FilePDF\\Massimiliano Di Penta"
+
+        assert find_path(autore) == path
 
 if __name__ == '__main__':
     unittest.main()

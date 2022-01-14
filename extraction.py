@@ -5,7 +5,6 @@ import getpass
 import io
 import numpy as np
 import pandas as pd
-import main
 from tika import parser
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
