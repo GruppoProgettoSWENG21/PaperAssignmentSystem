@@ -1,7 +1,10 @@
 # content of test_class.py
 from extraction import text_preproc,jaccard_similarity,my_tokenizer
 
-class TestClass(unittest.TestCase):
+class TestClass:
+
+    def __init__(self):
+        pass
 
     def test_text_preproc(self):
         x1 = "xbd"
@@ -52,4 +55,5 @@ class TestClass(unittest.TestCase):
         words2 = ['john', 'goe', 'school', 'friend']
 
         assert my_tokenizer(words1) == words2
+
 
