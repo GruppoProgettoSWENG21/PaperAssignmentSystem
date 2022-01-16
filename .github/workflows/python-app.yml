@@ -4,8 +4,6 @@
 name: Python application
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
     branches: [ main ]
 
@@ -29,4 +27,4 @@ jobs:
     - name: Test with pytest and coverage
       run: |
         python -m coverage run -m pytest 
-        coverage html
+        python -m coverage html
