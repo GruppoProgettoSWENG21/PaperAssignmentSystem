@@ -31,4 +31,6 @@ jobs:
         python -m coverage run -m pytest 
     - name: Html file creation
       run: |
+        python -m mkdir htmlcov
+        python -m cd htmlcov
         python -m coverage html
