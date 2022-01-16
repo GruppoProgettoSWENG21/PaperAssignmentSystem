@@ -13,6 +13,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import snowball
+from tabulate import tabulate
+from PyPDF2 import PdfFileReader
 
 
 def find_path_for_extraction():
@@ -299,4 +301,15 @@ if __name__ == '__main__':  # MAIN! ESTRAZIONE CONTENUTI PDF E VALUTAZIONE DELLA
     autori.remove("Massimiliano Di Penta")
 
     for pdf in pdf_di_penta:
-        crezioneTabella(pdf, autori, autori_titoli[pdf], autori_tit_ab[pdf], autori_keywords[pdf])
+        info = {'Possibili Revisori': autori, 'Cosine Similarity: Titoli': autori_titoli[pdf],
+                'Cosine Similarity: Titoli+Abstract': autori_tit_ab[pdf],
+                'Jaccard Similarity: Keywords': autori_keywords[pdf]}
+
+        with open(path + "Massimiliano Di Penta\\" + pdf, 'rb') as f:
+            pdf_reader = PdfFileReader(f)
+            titolo = pdf_reader.getDocumentInfo().title
+            print(titolo)
+            print(pdf)
+            print(tabulate(info, headers='keys', tablefmt='fancy_grid'))
+            print()
+            print()
