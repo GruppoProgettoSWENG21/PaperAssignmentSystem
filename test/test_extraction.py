@@ -1,5 +1,6 @@
 # content of test_class.py
 from extraction import text_preproc,jaccard_similarity,my_tokenizer
+import unittest
 
 class TestClass(unittest.TestCase):
 
