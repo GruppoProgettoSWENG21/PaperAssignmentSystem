@@ -1,7 +1,5 @@
 # content of test_class.py
-import unittest
-from extraction import text_preproc, jaccard_similarity, my_tokenizer, find_path_for_extraction
-from main import find_path
+from extraction import *
 
 class TestClass(unittest.TestCase):
 
@@ -55,5 +53,3 @@ class TestClass(unittest.TestCase):
 
         assert my_tokenizer(words1) == words2
 
-if __name__ == '__main__':
-    unittest.main()
