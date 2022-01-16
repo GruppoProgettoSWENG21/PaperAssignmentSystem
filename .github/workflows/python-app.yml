@@ -29,4 +29,6 @@ jobs:
     - name: Test with pytest and coverage
       run: |
         python -m coverage run -m pytest 
+    - name: Html file creation
+      run: |
         python -m coverage html
