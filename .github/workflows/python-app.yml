@@ -24,13 +24,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pytest
-        pip install pytest-cov
+        pip install coverage
         pip install -r requirements.txt
-    - name: Test with pytest
+    - name: Test with pytest and coverage
       run: |
-        python -m pytest
-    - name: Build coverage file
-      run: |
-        pytest --cache-clear --cov=app test/ > pytest-coverage.txt
-    - name: Comment coverage
-      uses: coroo/pytest-coverage-commentator@v1.0.2
+        python coverage run -m pytest 
+        coverage html
