@@ -29,12 +29,9 @@ jobs:
         pip install -r requirements.txt
     - name: Test with pytest and coverage
       run: |
-        python -m pytest --cov-report xml --cov=./ 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v2
+        python -m pytest --cov-report xml --cov=./
+    - name: Report test coverage to DeepSource
+      uses: deepsourcelabs/test-coverage-action@master
       with:
-        directory: ./
-        env_vars: OS,PYTHON
-        fail_ci_if_error: true
-        files: ./coverage.xml
-        flags: unittests
+        key: python
+        coverage-file: coverage.xml
