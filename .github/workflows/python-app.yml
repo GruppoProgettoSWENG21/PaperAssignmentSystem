@@ -29,15 +29,12 @@ jobs:
         pip install -r requirements.txt
     - name: Test with pytest and coverage
       run: |
-        python -m pytest --cov=./ --cov-report=xml
+        python -m pytest --cov-report xml --cov=./ 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
-        directory: ./coverage/reports/
+        directory: ./
         env_vars: OS,PYTHON
         fail_ci_if_error: true
-        files: ./coverage1.xml,./coverage2.xml
+        files: ./coverage.xml
         flags: unittests
-        name: codecov-umbrella
-        path_to_write_report: ./coverage/codecov_report.txt
-        verbose: true 
