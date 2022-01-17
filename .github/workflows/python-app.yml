@@ -1,14 +1,12 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python application
+name: Coverage
 
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
+    
 jobs:
   build:
 
@@ -27,12 +25,5 @@ jobs:
         pip install pytest
         pip install pytest-cov
         pip install -r requirements.txt
-    - name: Test with pytest and coverage
-      run: |
-        python -m pytest --cov-report xml --cov=./
-    - name: Report test coverage to DeepSource
-      uses: deepsourcelabs/test-coverage-action@master
-      with:
-        key: python
-        coverage-file: coverage.xml
-        dsn: ${{ secrets.DEEPSOURCE_DSN }}
+    - name: Coverage
+      uses: codecov/codecov-action@v2
