@@ -27,7 +27,7 @@ def find_path_for_extraction():
     print("L'utente è: " + username)
 
     if so == "Windows":
-        path = "C:\\Users\\" + username + "\\Desktop\\PDFRidotti\\"
+        path = "C:\\Users\\" + username + "\\Desktop\\FilePDF\\"
         print(path)
     elif so == "Mac OS X":
         path = "/Users/" + username + "/Desktop/FilePDF"
