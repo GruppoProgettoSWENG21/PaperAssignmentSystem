@@ -149,196 +149,194 @@ def jaccard_similarity(reviewer_dict, input_dict):
     return values_calculated
 
 
-if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
-    
-    authors = []
-    author_title_abstact = {}
-    author_keywords = {}
-    author_titles = {}
-    
-    path = find_path_for_extraction()
-    
-    # for per il prelievo di titolo abstract e keywords
-    for file_PDF, sub_directory, files in os.walk(path, followlinks=True):
-        for my_directory in sub_directory:
-            title_abstract = {}
-            keywords = {}
-            titles = {}
-            my_path = path + my_directory + "\\"
-            author_name = my_directory
-            for sub_filePDF, sub_dir, sub_files in os.walk(my_path, followlinks=True):
-                for file_name in sub_files:
-    
-                    parsed_pdf = parser.from_file(my_path + file_name)
-                    output = parsed_pdf['content']
-    
-                    with io.open('output.txt', 'w', encoding='utf8') as the_file:
-                        if output:
-                            the_file.write(str(output.lower().encode('utf8', errors='ignore')))
-    
-                    file_output = open("output.txt", "r", encoding="utf8").readline()
-                    file_output = text_preproc(file_output)
-    
-                    try:
-                        titl = re.findall('^.{0,120}', file_output)
-                        titles[file_name] = titl[0]
-                        if "abstract" in file_output[:1000]:
-                            if "keywords" in file_output and not "index terms" in file_output:
-                                abstr = re.findall('abstract(.*?)keywords', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('keywords(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-    
-                            elif "index terms" in file_output:
-                                abstr = re.findall('abstract(.*?)index terms', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('index terms(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-    
-                            elif "introduction" in file_output:
-                                abstr = re.findall('abstract(.*?)introduction', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keywords[file_name] = " "
-    
-                            else:
-                                print("Non funziona")
-                                print(file_name)
-    
-                        elif "summary" in file_output[:1000]:
-                            if "keywords" in file_output and not "index terms" in file_output:
-                                abstr = re.findall('summary(.*?)keywords', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('keywords(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-    
-                            elif "index terms" in file_output:
-                                abstr = re.findall('summary(.*?)index terms', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('index terms(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-    
-                            elif "introduction" in file_output:
-                                abstr = re.findall('summary(.*?)introduction', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keywords[file_name] = " "
-    
-                            else:
-                                print("Non trova nulla")
-                                print(file_name)
-    
-                        else:
-                            abstr = re.findall('(.*?)introduction', file_output)
+authors = []
+author_title_abstact = {}
+author_keywords = {}
+author_titles = {}
+
+path = find_path_for_extraction()
+
+# for per il prelievo di titolo abstract e keywords
+for file_PDF, sub_directory, files in os.walk(path, followlinks=True):
+    for my_directory in sub_directory:
+        title_abstract = {}
+        keywords = {}
+        titles = {}
+        my_path = path + my_directory + "\\"
+        author_name = my_directory
+        for sub_filePDF, sub_dir, sub_files in os.walk(my_path, followlinks=True):
+            for file_name in sub_files:
+
+                parsed_pdf = parser.from_file(my_path + file_name)
+                output = parsed_pdf['content']
+
+                with io.open('output.txt', 'w', encoding='utf8') as the_file:
+                    if output:
+                        the_file.write(str(output.lower().encode('utf8', errors='ignore')))
+
+                file_output = open("output.txt", "r", encoding="utf8").readline()
+                file_output = text_preproc(file_output)
+
+                try:
+                    titl = re.findall('^.{0,120}', file_output)
+                    titles[file_name] = titl[0]
+                    if "abstract" in file_output[:1000]:
+                        if "keywords" in file_output and not "index terms" in file_output:
+                            abstr = re.findall('abstract(.*?)keywords', file_output)
+                            title_abstract[file_name] = abstr[0] + titl[0]
+                            keyw = re.findall('keywords(.*?)introduction', file_output)
+                            keywords[file_name] = keyw[0]
+
+                        elif "index terms" in file_output:
+                            abstr = re.findall('abstract(.*?)index terms', file_output)
+                            title_abstract[file_name] = abstr[0] + titl[0]
+                            keyw = re.findall('index terms(.*?)introduction', file_output)
+                            keywords[file_name] = keyw[0]
+
+                        elif "introduction" in file_output:
+                            abstr = re.findall('abstract(.*?)introduction', file_output)
                             title_abstract[file_name] = abstr[0] + titl[0]
                             keywords[file_name] = " "
-    
-                    except:
-                        print("Error in filename " + file_name + str(IOError))
-                        continue
-    
-            author_title_abstact[author_name] = title_abstract
-            author_keywords[author_name] = keywords
-            author_titles[author_name] = titles
-            authors.append(author_name)
-    
-    print("EXTRACTION ENDED SUCCESSFULLY")
-    
-    pdf_di_penta = []
-    for pdf in sorted(author_titles["Massimiliano Di Penta"].keys()):
-        pdf_di_penta.append(pdf)
-    
-    print("********************************")
-    print()
-    
-    
-    # 1) utilizzo della funzione jaccard per le KEYWORDS
-    
-    massimo_keywords = {}
-    
-    for nome_autore in sorted(author_keywords.keys()):
-        if not "Massimiliano Di Penta" in nome_autore:
-            valori_massimi = jaccard_similarity(author_keywords[nome_autore], author_keywords["Massimiliano Di Penta"])
-            massimo_keywords.update({nome_autore: valori_massimi})
-    
-    
-    autori_keywords = {}
+
+                        else:
+                            print("Non funziona")
+                            print(file_name)
+
+                    elif "summary" in file_output[:1000]:
+                        if "keywords" in file_output and not "index terms" in file_output:
+                            abstr = re.findall('summary(.*?)keywords', file_output)
+                            title_abstract[file_name] = abstr[0] + titl[0]
+                            keyw = re.findall('keywords(.*?)introduction', file_output)
+                            keywords[file_name] = keyw[0]
+
+                        elif "index terms" in file_output:
+                            abstr = re.findall('summary(.*?)index terms', file_output)
+                            title_abstract[file_name] = abstr[0] + titl[0]
+                            keyw = re.findall('index terms(.*?)introduction', file_output)
+                            keywords[file_name] = keyw[0]
+
+                        elif "introduction" in file_output:
+                            abstr = re.findall('summary(.*?)introduction', file_output)
+                            title_abstract[file_name] = abstr[0] + titl[0]
+                            keywords[file_name] = " "
+
+                        else:
+                            print("Non trova nulla")
+                            print(file_name)
+
+                    else:
+                        abstr = re.findall('(.*?)introduction', file_output)
+                        title_abstract[file_name] = abstr[0] + titl[0]
+                        keywords[file_name] = " "
+
+                except:
+                    print("Error in filename " + file_name + str(IOError))
+                    continue
+
+        author_title_abstact[author_name] = title_abstract
+        author_keywords[author_name] = keywords
+        author_titles[author_name] = titles
+        authors.append(author_name)
+
+print("EXTRACTION ENDED SUCCESSFULLY")
+
+pdf_di_penta = []
+for pdf in sorted(author_titles["Massimiliano Di Penta"].keys()):
+    pdf_di_penta.append(pdf)
+
+print("********************************")
+print()
+
+
+# 1) utilizzo della funzione jaccard per le KEYWORDS
+
+massimo_keywords = {}
+
+for nome_autore in sorted(author_keywords.keys()):
+    if not "Massimiliano Di Penta" in nome_autore:
+        valori_massimi = jaccard_similarity(author_keywords[nome_autore], author_keywords["Massimiliano Di Penta"])
+        massimo_keywords.update({nome_autore: valori_massimi})
+
+
+autori_keywords = {}
+val_max_keywords_tabella = []
+
+for pdf in sorted(pdf_di_penta):
+    print(pdf)
+    for autore in sorted(authors):
+        if not "Massimiliano Di Penta" in autore:
+            print(autore + " -----> " + str(massimo_keywords[autore][pdf]))
+            val_max_keywords_tabella.append(massimo_keywords[autore][pdf])
+    autori_keywords.update({pdf: val_max_keywords_tabella})
     val_max_keywords_tabella = []
-    
-    for pdf in sorted(pdf_di_penta):
-        print(pdf)
-        for autore in sorted(authors):
-            if not "Massimiliano Di Penta" in autore:
-                print(autore + " -----> " + str(massimo_keywords[autore][pdf]))
-                val_max_keywords_tabella.append(massimo_keywords[autore][pdf])
-        autori_keywords.update({pdf: val_max_keywords_tabella})
-        val_max_keywords_tabella = []
-        print("<---------------------------------------------------->")
-    
-    print("********************************")
-    print()
-    # 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
-    
-    print("ABSTRACT+TITOLI")
-    
-    massimo_tit_ab = {}
-    
-    for nome_autore in sorted(author_title_abstact.keys()):
-        if not "Massimiliano Di Penta" in nome_autore:
-            valori_massimi = cos_similarity(author_title_abstact[nome_autore], author_title_abstact["Massimiliano Di Penta"])
-            massimo_tit_ab.update({nome_autore: valori_massimi})
-    
-    autori_tit_ab = {}
-    val_max_tit_ab_tabella = []
-    
-    for pdf in sorted(pdf_di_penta):
-        print(pdf)
-        for autore in sorted(authors):
-            if not "Massimiliano Di Penta" in autore:
-                print(autore + " -----> " + str(np.max(massimo_tit_ab[autore][pdf])))
-                val_max_tit_ab_tabella.append(float(np.max(massimo_tit_ab[autore][pdf])))
-        autori_tit_ab.update({pdf: val_max_tit_ab_tabella})
-        val_max_tit_ab_tabella = []
-        print("<---------------------------------------------------->")
-    
-    print("********************************")
-    print()
-    
-    # 3) utilizzo della funzione cosine similarity sul TITOLO
-    
-    print("TITOLI")
-    
-    massimo_tit = {}
-    
-    for nome_autore in sorted(author_titles.keys()):
-        if not "Massimiliano Di Penta" in nome_autore:
-            valori_massimi = cos_similarity(author_titles[nome_autore], author_titles["Massimiliano Di Penta"])
-            massimo_tit.update({nome_autore: valori_massimi})
-    
-    autori_titoli = {}
-    val_max_tit_tabella = []
-    
-    for pdf in pdf_di_penta:
-        print(pdf)
-        for autore in sorted(authors):
-            if not "Massimiliano Di Penta" in autore:
-                print(autore + " -----> " + str(np.max(massimo_tit[autore][pdf])))
-                val_max_tit_tabella.append(float(np.max(massimo_tit[autore][pdf])))
-        autori_titoli.update({pdf: val_max_tit_tabella})
-        val_max_tit_tabella = []
-    
     print("<---------------------------------------------------->")
-    
-    
-    authors.remove("Massimiliano Di Penta")
-    
-    for pdf in pdf_di_penta:
-        info = {'Possibili Revisori': authors, 'Cosine Similarity: Titoli': autori_titoli[pdf],
-                'Cosine Similarity: Titoli+Abstract': autori_tit_ab[pdf],
-                'Jaccard Similarity: Keywords': autori_keywords[pdf]}
-    
-        with open(path + "Massimiliano Di Penta\\" + pdf, 'rb') as f:
-            pdf_reader = PdfFileReader(f)
-            titolo = pdf_reader.getDocumentInfo().title
-            print(titolo)
-            print(tabulate(info, headers='keys', tablefmt='fancy_grid'))
-            print()
-            print()
+
+print("********************************")
+print()
+# 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
+
+print("ABSTRACT+TITOLI")
+
+massimo_tit_ab = {}
+
+for nome_autore in sorted(author_title_abstact.keys()):
+    if not "Massimiliano Di Penta" in nome_autore:
+        valori_massimi = cos_similarity(author_title_abstact[nome_autore], author_title_abstact["Massimiliano Di Penta"])
+        massimo_tit_ab.update({nome_autore: valori_massimi})
+
+autori_tit_ab = {}
+val_max_tit_ab_tabella = []
+
+for pdf in sorted(pdf_di_penta):
+    print(pdf)
+    for autore in sorted(authors):
+        if not "Massimiliano Di Penta" in autore:
+            print(autore + " -----> " + str(np.max(massimo_tit_ab[autore][pdf])))
+            val_max_tit_ab_tabella.append(float(np.max(massimo_tit_ab[autore][pdf])))
+    autori_tit_ab.update({pdf: val_max_tit_ab_tabella})
+    val_max_tit_ab_tabella = []
+    print("<---------------------------------------------------->")
+
+print("********************************")
+print()
+
+# 3) utilizzo della funzione cosine similarity sul TITOLO
+
+print("TITOLI")
+
+massimo_tit = {}
+
+for nome_autore in sorted(author_titles.keys()):
+    if not "Massimiliano Di Penta" in nome_autore:
+        valori_massimi = cos_similarity(author_titles[nome_autore], author_titles["Massimiliano Di Penta"])
+        massimo_tit.update({nome_autore: valori_massimi})
+
+autori_titoli = {}
+val_max_tit_tabella = []
+
+for pdf in pdf_di_penta:
+    print(pdf)
+    for autore in sorted(authors):
+        if not "Massimiliano Di Penta" in autore:
+            print(autore + " -----> " + str(np.max(massimo_tit[autore][pdf])))
+            val_max_tit_tabella.append(float(np.max(massimo_tit[autore][pdf])))
+    autori_titoli.update({pdf: val_max_tit_tabella})
+    val_max_tit_tabella = []
+
+print("<---------------------------------------------------->")
+
+
+authors.remove("Massimiliano Di Penta")
+
+for pdf in pdf_di_penta:
+    info = {'Possibili Revisori': authors, 'Cosine Similarity: Titoli': autori_titoli[pdf],
+            'Cosine Similarity: Titoli+Abstract': autori_tit_ab[pdf],
+            'Jaccard Similarity: Keywords': autori_keywords[pdf]}
+
+    with open(path + "Massimiliano Di Penta\\" + pdf, 'rb') as f:
+        pdf_reader = PdfFileReader(f)
+        titolo = pdf_reader.getDocumentInfo().title
+        print(titolo)
+        print(tabulate(info, headers='keys', tablefmt='fancy_grid'))
+        print()
+        print()

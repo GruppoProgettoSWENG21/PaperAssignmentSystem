@@ -1,4 +1,5 @@
-# content of test_class.py
+# content of test_extraction.py
+
 from extraction import text_preproc,jaccard_similarity,my_tokenizer
 import unittest
 
