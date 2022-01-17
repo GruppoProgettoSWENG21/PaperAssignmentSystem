@@ -24,7 +24,7 @@
 #   * peter-evans/commit-comment@v1: adds message to commit
 # **************************************************************************************************************** #
 
-name: pytester-cov workflow
+name: Coverage with pytest-cov
 
 on: [push]
 
@@ -33,8 +33,8 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      COVERAGE_SINGLE: 20
-      COVERAGE_TOTAL: 20
+      COVERAGE_SINGLE: 10
+      COVERAGE_TOTAL: 10
 
     steps:
     - uses: actions/checkout@v2
