@@ -1,4 +1,4 @@
-name: Static analisis with Pylint
+name: Static analysis with Pylint
 
 on: [push]
 
