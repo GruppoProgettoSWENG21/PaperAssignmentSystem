@@ -1,12 +1,11 @@
 # content of test_extraction.py
 from sklearn.feature_extraction.text import CountVectorizer
 from extraction import find_path_for_extraction,text_preproc,cos_similarity,jaccard_similarity,my_tokenizer,create_tokenized_documents,create_model,user_choice,calculate_jaccard,calculate_table_values
-import unittest
 import numpy as np
 from numpy import array
 from mock_test import set_keyboard_input,get_display_output
 
-class TestClass(unittest.TestCase):
+class TestClass:
 
     def test_text_preproc(self):
 
@@ -101,6 +100,3 @@ class TestClass(unittest.TestCase):
         dict3 = {"Pdf1": lista}
 
         assert calculate_table_values(pdf_list, dict2, authors) == dict3
-
-if __name__ == '__main__':
-    TestClass.main()
