@@ -17,7 +17,7 @@ from tabulate import tabulate
 from PyPDF2 import PdfFileReader
 
 
-def find_path_for_extraction(): #pragma no cover
+def find_path_for_extraction():
 
     """
         Funzione che mi permette di ottenere il path dove sono presenti i pdf dei possibili revisori e dei pdf da assegnare
@@ -44,8 +44,7 @@ def find_path_for_extraction(): #pragma no cover
 
     return path
 
-
-def text_preproc(x): #pragma no cover
+def text_preproc(x):
 
 
     """
@@ -70,8 +69,7 @@ def text_preproc(x): #pragma no cover
 
     return x
 
-
-def my_tokenizer(text): #pragma no cover
+def my_tokenizer(text):
 
     """
     Tokenization function (funzione che mi permette di eliminare stopwords e effettuare lo stemming)
@@ -88,8 +86,7 @@ def my_tokenizer(text): #pragma no cover
               for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
     return pruned
 
-
-def create_tokenized_documents(reviewer_dict): #pragma no cover
+def create_tokenized_documents(reviewer_dict):
 
     texts = []
 
@@ -99,8 +96,7 @@ def create_tokenized_documents(reviewer_dict): #pragma no cover
 
     return texts
 
-
-def create_model(vectorizer,texts): #pragma no cover
+def create_model(vectorizer,texts):
 
     """
 
@@ -116,8 +112,7 @@ def create_model(vectorizer,texts): #pragma no cover
 
     return model
 
-
-def cos_similarity(reviewer_dict, input_dict): #pragma no cover
+def cos_similarity(reviewer_dict, input_dict):
     
     """
         Funzione di cosine similarity fatta tra la query e i documenti
@@ -141,7 +136,6 @@ def cos_similarity(reviewer_dict, input_dict): #pragma no cover
         values.update({pdf: cos})
 
     return values
-
 
 def jaccard_similarity(reviewer_dict, input_dict):
     
@@ -180,7 +174,6 @@ def jaccard_similarity(reviewer_dict, input_dict):
 
     return values_calculated
 
-
 def user_choice():
 
     decision = ''
@@ -195,7 +188,6 @@ def user_choice():
 
     return decision
 
-
 def calculate_jaccard(dict_reviewer):
 
     massimo_keywords = {}
@@ -206,7 +198,6 @@ def calculate_jaccard(dict_reviewer):
             massimo_keywords.update({nome_autore: valori_massimi})
 
     return massimo_keywords
-
 
 def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
 
@@ -224,7 +215,6 @@ def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
         print("<---------------------------------------------------->")
 
     return autori_keywords
-
 
 
 if __name__ == '__main__':

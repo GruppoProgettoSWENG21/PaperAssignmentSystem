@@ -8,7 +8,7 @@ from mock_test import set_keyboard_input,get_display_output
 
 class TestClass(unittest.TestCase):
 
-    def test_text_preproc(self):  #pragma no cover
+    def test_text_preproc(self):
 
         #wb
         x1 = "xbd"
@@ -45,7 +45,7 @@ class TestClass(unittest.TestCase):
         assert text_preproc(x15) == " "
         assert text_preproc(x16) == " for"
 
-    def test_jaccard_similarity(self):  #bb
+    def test_jaccard_similarity(self):
 
         # il test lo vado a fare su una parte del requisito da implementare
 
@@ -55,16 +55,14 @@ class TestClass(unittest.TestCase):
 
         assert jaccard_similarity(dict1, dict2) == dict3
 
-    def test_my_tokenizer(self): #pragma no cover
-        # wb
+    def test_my_tokenizer(self):
+
         words1 = 'John goes to school with his friends'
         words2 = ['john', 'goe', 'school', 'friend']
 
         assert my_tokenizer(words1) == words2
 
-    def test_create_tokenized_documents(self):  #pragma no cover
-
-        #wb
+    def test_create_tokenized_documents(self):
 
         dict1 = {"Pdf1": "Abstract del primo pdf", "Pdf2":"Abstract del secondo pdf"}
         texts = ["Abstract del primo pdf","Abstract del secondo pdf"]
@@ -73,7 +71,6 @@ class TestClass(unittest.TestCase):
 
     def test_user_choice(self):
 
-        # bb
         set_keyboard_input(['media'])
         user_choice()
         output1 = get_display_output()
@@ -84,7 +81,7 @@ class TestClass(unittest.TestCase):
         assert output1 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni 'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione media"]
         assert output2 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni 'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione valore massimo"]
 
-    def test_calculate_jaccard(self):  #bb
+    def test_calculate_jaccard(self):
 
         dict1 = {"Pdf1": "Software, open source, bug"}
         dict2 = {"Pdf2": "Hardware, bug, private"}
@@ -94,7 +91,7 @@ class TestClass(unittest.TestCase):
 
         assert calculate_jaccard(dict3) == dict5
 
-    def test_calculate_table_values(self): #bb
+    def test_calculate_table_values(self):
 
         dict1 = {"Pdf1": 0.16666666666666666}
         dict2 = {"Alfredo Di Geronimo": dict1}
