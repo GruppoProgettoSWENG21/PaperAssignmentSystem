@@ -9,6 +9,15 @@ from selenium.webdriver.common.by import By
 
 
 def reload(this_driver, page_to_reload):
+
+    """
+        Funzione di jaccard similarity tra la query e i singoli documenti
+
+            :param this_driver: dizionario contenente come valore le keywords dei pdf dei reviori
+            :param page_to_reload: dizionario contenente come valore le keywords dei pdf della query
+
+        """
+
     this_driver.implicitly_wait(5)
     this_driver.get(page_to_reload)
     time.sleep(1)
@@ -19,6 +28,15 @@ def reload(this_driver, page_to_reload):
 
 
 def find_path(autore_to_find):
+
+    """
+        Funzione che mi permette di ottenere il path in cui inserire i pdf dei possibili revisori e i pdf da assegnare
+
+            :param autore_to_find: autore che serve per la creazione del path
+            :return path: path in cui sono presenti i pdf da valutare
+
+    """
+
     path = ""
     so = platform.system()
     print("Il sistema operativo è: " + so)
@@ -41,6 +59,15 @@ def find_path(autore_to_find):
 
 
 def setup_driver(autore_to_find):
+
+    """
+        Setup del webdriver per il prelievo dei PDF su Google Scolar
+
+            :param autore_to_find: autore che serve per la creazione del path
+            :return our_driver: path in cui sono presenti i pdf da valutare
+
+    """
+
     path = find_path(autore_to_find)
     options = webdriver.ChromeOptions()
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -60,7 +87,7 @@ def setup_driver(autore_to_find):
     return our_driver
 
 
-if __name__ == '__main__':  # MAIN! PREPARAZIONE AL PRELIEVO DEI FILE PDF
+if __name__ == '__main__':  # pragma: no cover
 
     autori = ["Zhenchang Xing", "Bram Adams", "Kelly Blincoe", "Xin Xia", "Gordon Fraser", "Romain Robbes", "Sven Apel"]
 

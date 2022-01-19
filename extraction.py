@@ -18,7 +18,14 @@ from PyPDF2 import PdfFileReader
 
 
 def find_path_for_extraction():
-    
+
+    """
+        Funzione che mi permette di ottenere il path dove sono presenti i pdf dei possibili revisori e dei pdf da assegnare
+
+        :return path: path in cui sono presenti i pdf da valutare
+
+    """
+
     path = ""
     so = platform.system()
     print("Il sistema operativo è: " + so)
@@ -115,10 +122,9 @@ def jaccard_similarity(reviewer_dict, input_dict):
     """
     Funzione di jaccard similarity tra la query e i singoli documenti
 
-        :param input_query_key: dizionario contenente come valore le keywords dei pdf dei reviori
-        :param dict_keyword_di_penta: dizionario contenente come valore le keywords dei pdf della query
+        :param reviewer_dict: dizionario contenente come valore le keywords dei pdf dei reviori
+        :param input_dict: dizionario contenente come valore le keywords dei pdf della query
         :return values_calculated: dizionario contenente come valore il massimo valore dello jaccard per ogni pdf query
-
 
     """
 
