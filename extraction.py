@@ -34,7 +34,7 @@ def find_path_for_extraction():
     print("L'utente è: " + username)
 
     if so == "Windows":
-        path = "C:\\Users\\" + username + "\\Desktop\\FilePDF\\"
+        path = "C:\\Users\\" + username + "\\Desktop\\PDFRidotti\\"
         print(path)
     elif so == "Mac OS X":
         path = "/Users/" + username + "/Desktop/FilePDF"
@@ -88,6 +88,34 @@ def my_tokenizer(text):
     return pruned
 
 
+def create_tokenized_documents(reviewer_dict):
+
+    texts = []
+
+    for key in sorted(reviewer_dict.keys()):
+        # Creates an array of tokenized documents
+        texts.append(reviewer_dict[key])
+
+    return texts
+
+
+def create_model(vectorizer,texts):
+
+    """
+
+        Funzione di cosine similarity fatta tra la query e i documenti
+
+            :param reviewer_dict:  dizionario contenente come valore il titolo/titoli+abstract dei pdf dei revisori
+            :param input_dict: dizionario contenente come valore il titolo/titoli+abstract della query
+            :return values:  dizionario contente come valore la lista dei valori di cos_similarity tra la query e i pdf dei revisori
+
+    """
+    # creates the model
+    model = vectorizer.fit_transform(texts)
+
+    return model
+
+
 def cos_similarity(reviewer_dict, input_dict):
     
     """
@@ -97,19 +125,15 @@ def cos_similarity(reviewer_dict, input_dict):
             :param input_dict: dizionario contenente come valore il titolo/titoli+abstract della query
             :return values:  dizionario contente come valore la lista dei valori di cos_similarity tra la query e i pdf dei revisori
 
-        """
+    """
 
-    texts = []
+    texts = create_tokenized_documents(reviewer_dict)
     values = {}
 
-    for key in sorted(reviewer_dict.keys()):
-        # Creates an array of tokenized documents
-        texts.append(reviewer_dict[key])
     for pdf in sorted(input_dict.keys()):
-        vectorizer = CountVectorizer(tokenizer=my_tokenizer)
-        # creates the model
-        model = vectorizer.fit_transform(texts)
         # adds a query to the model
+        vectorizer = CountVectorizer(tokenizer=my_tokenizer)
+        model = create_model(vectorizer,texts)
         query = vectorizer.transform([input_dict[pdf]])
         cos = cosine_similarity(query, model)
         values.update({pdf: cos})
@@ -155,7 +179,53 @@ def jaccard_similarity(reviewer_dict, input_dict):
     return values_calculated
 
 
-if __name__ == '__main__':  # pragma: no cover
+def user_choice():
+
+    decision = ''
+    # Possibilità di far scegliere all'utente tra valore massimo e media
+    while decision != "media" and decision != "valore massimo":
+            decision = input(
+            "L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni /"
+            "'titoli' e 'titoli+abstract'? ").lower()
+            if decision != "media" and decision != "valore massimo":
+                print("Input non valido inserire media o valore massimo")
+
+    print("L'utente ha scelto l'opzione {}".format(decision))
+
+
+    return decision
+
+
+def calculate_jaccard(dict_reviewer):
+
+    massimo_keywords = {}
+
+    for nome_autore in sorted(dict_reviewer.keys()):
+        if not "Massimiliano Di Penta" in nome_autore:
+            valori_massimi = jaccard_similarity(dict_reviewer[nome_autore], dict_reviewer["Massimiliano Di Penta"])
+            massimo_keywords.update({nome_autore: valori_massimi})
+
+    return massimo_keywords
+
+
+def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
+
+    autori_keywords = {}
+    val_max_keywords_tabella = []
+
+    for pdf in sorted(pdf_di_penta):
+        print(pdf)
+        for autore in sorted(authors):
+            if not "Massimiliano Di Penta" in autore:
+                print(autore + " -----> " + str(massimo_keywords[autore][pdf]))
+                val_max_keywords_tabella.append(massimo_keywords[autore][pdf])
+        autori_keywords.update({pdf: val_max_keywords_tabella})
+        val_max_keywords_tabella = []
+        print("<---------------------------------------------------->")
+
+    return autori_keywords
+
+if __name__ == '__main__':
 
     authors = []
     author_title_abstact = {}
@@ -248,6 +318,9 @@ if __name__ == '__main__':  # pragma: no cover
 
     print("EXTRACTION ENDED SUCCESSFULLY")
 
+
+    decision = user_choice()
+
     pdf_di_penta = []
     for pdf in sorted(author_titles["Massimiliano Di Penta"].keys()):
         pdf_di_penta.append(pdf)
@@ -258,51 +331,40 @@ if __name__ == '__main__':  # pragma: no cover
 
     # 1) utilizzo della funzione jaccard per le KEYWORDS
 
-    massimo_keywords = {}
+    massimo_keywords = calculate_jaccard(author_keywords)
+    autori_keywords = calculate_table_values(pdf_di_penta,massimo_keywords,authors)
 
-    for nome_autore in sorted(author_keywords.keys()):
-        if not "Massimiliano Di Penta" in nome_autore:
-            valori_massimi = jaccard_similarity(author_keywords[nome_autore], author_keywords["Massimiliano Di Penta"])
-            massimo_keywords.update({nome_autore: valori_massimi})
-
-
-    autori_keywords = {}
-    val_max_keywords_tabella = []
-
-    for pdf in sorted(pdf_di_penta):
-        print(pdf)
-        for autore in sorted(authors):
-            if not "Massimiliano Di Penta" in autore:
-                print(autore + " -----> " + str(massimo_keywords[autore][pdf]))
-                val_max_keywords_tabella.append(massimo_keywords[autore][pdf])
-        autori_keywords.update({pdf: val_max_keywords_tabella})
-        val_max_keywords_tabella = []
-        print("<---------------------------------------------------->")
 
     print("********************************")
     print()
+
     # 2) utilizzo della funzione cosine similarity sul TITOLO e ABSTRACT
 
     print("ABSTRACT+TITOLI")
 
-    massimo_tit_ab = {}
+    tit_ab = {}
 
     for nome_autore in sorted(author_title_abstact.keys()):
         if not "Massimiliano Di Penta" in nome_autore:
-            valori_massimi = cos_similarity(author_title_abstact[nome_autore], author_title_abstact["Massimiliano Di Penta"])
-            massimo_tit_ab.update({nome_autore: valori_massimi})
+            valori_ab_tit = cos_similarity(author_title_abstact[nome_autore],
+                                           author_title_abstact["Massimiliano Di Penta"])
+            tit_ab.update({nome_autore: valori_ab_tit})
 
     autori_tit_ab = {}
-    val_max_tit_ab_tabella = []
+    val_tit_ab_tabella = []
 
     for pdf in sorted(pdf_di_penta):
         print(pdf)
         for autore in sorted(authors):
             if not "Massimiliano Di Penta" in autore:
-                print(autore + " -----> " + str(np.max(massimo_tit_ab[autore][pdf])))
-                val_max_tit_ab_tabella.append(float(np.max(massimo_tit_ab[autore][pdf])))
-        autori_tit_ab.update({pdf: val_max_tit_ab_tabella})
-        val_max_tit_ab_tabella = []
+                if decision == "media":
+                    print(autore + " -----> " + str(np.mean(tit_ab[autore][pdf])))
+                    val_tit_ab_tabella.append(float(np.mean(tit_ab[autore][pdf])))
+                elif decision == "valore massimo":
+                    print(autore + " -----> " + str(np.max(tit_ab[autore][pdf])))
+                    val_tit_ab_tabella.append(float(np.max(tit_ab[autore][pdf])))
+        autori_tit_ab.update({pdf: val_tit_ab_tabella})
+        val_tit_ab_tabella = []
         print("<---------------------------------------------------->")
 
     print("********************************")
@@ -312,24 +374,28 @@ if __name__ == '__main__':  # pragma: no cover
 
     print("TITOLI")
 
-    massimo_tit = {}
+    tit = {}
 
     for nome_autore in sorted(author_titles.keys()):
         if not "Massimiliano Di Penta" in nome_autore:
-            valori_massimi = cos_similarity(author_titles[nome_autore], author_titles["Massimiliano Di Penta"])
-            massimo_tit.update({nome_autore: valori_massimi})
+            valori_tit = cos_similarity(author_titles[nome_autore], author_titles["Massimiliano Di Penta"])
+            tit.update({nome_autore: valori_tit})
 
     autori_titoli = {}
-    val_max_tit_tabella = []
+    val_tit_tabella = []
 
     for pdf in pdf_di_penta:
         print(pdf)
         for autore in sorted(authors):
             if not "Massimiliano Di Penta" in autore:
-                print(autore + " -----> " + str(np.max(massimo_tit[autore][pdf])))
-                val_max_tit_tabella.append(float(np.max(massimo_tit[autore][pdf])))
-        autori_titoli.update({pdf: val_max_tit_tabella})
-        val_max_tit_tabella = []
+                if decision == "media":
+                    print(autore + " -----> " + str(np.mean(tit_ab[autore][pdf])))
+                    val_tit_tabella.append(float(np.mean(tit_ab[autore][pdf])))
+                elif decision == "valore massimo":
+                    print(autore + " -----> " + str(np.max(tit_ab[autore][pdf])))
+                    val_tit_tabella.append(float(np.max(tit_ab[autore][pdf])))
+        autori_titoli.update({pdf: val_tit_tabella})
+        val_tit_tabella = []
 
     print("<---------------------------------------------------->")
 
