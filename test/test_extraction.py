@@ -1,12 +1,16 @@
 # content of test_extraction.py
 from sklearn.feature_extraction.text import CountVectorizer
-from extraction import text_preproc,jaccard_similarity,my_tokenizer,create_tokenized_documents,create_model,user_choice,calculate_jaccard,calculate_table_values
+from extraction import find_path_for_extraction,text_preproc,cos_similarity,jaccard_similarity,my_tokenizer,create_tokenized_documents,create_model,user_choice,calculate_jaccard,calculate_table_values
 import unittest
+import numpy as np
+from numpy import array
 from mock_test import set_keyboard_input,get_display_output
 
 class TestClass(unittest.TestCase):
 
-    def test_text_preproc(self):
+    def test_text_preproc(self):  #pragma no cover
+
+        #wb
         x1 = "xbd"
         x2 = "xef"
         x3 = "xbf"
@@ -41,7 +45,9 @@ class TestClass(unittest.TestCase):
         assert text_preproc(x15) == " "
         assert text_preproc(x16) == " for"
 
-    def test_jaccard_similarity(self):
+    def test_jaccard_similarity(self):  #bb
+
+        # il test lo vado a fare su una parte del requisito da implementare
 
         dict1 = {"Pdf1": "Software, open source, bug"}
         dict2 = {"Pdf2": "Hardware, bug, private"}
@@ -49,22 +55,25 @@ class TestClass(unittest.TestCase):
 
         assert jaccard_similarity(dict1, dict2) == dict3
 
-    def test_my_tokenizer(self):
-
+    def test_my_tokenizer(self): #pragma no cover
+        # wb
         words1 = 'John goes to school with his friends'
         words2 = ['john', 'goe', 'school', 'friend']
 
         assert my_tokenizer(words1) == words2
 
-    def test_create_tokenized_documents(self):
+    def test_create_tokenized_documents(self):  #pragma no cover
+
+        #wb
 
         dict1 = {"Pdf1": "Abstract del primo pdf", "Pdf2":"Abstract del secondo pdf"}
         texts = ["Abstract del primo pdf","Abstract del secondo pdf"]
 
         assert create_tokenized_documents(dict1) == texts
 
-    def test_decision_choice(self):
+    def test_user_choice(self):
 
+        # bb
         set_keyboard_input(['media'])
         user_choice()
         output1 = get_display_output()
@@ -75,7 +84,7 @@ class TestClass(unittest.TestCase):
         assert output1 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni 'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione media"]
         assert output2 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni 'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione valore massimo"]
 
-    def test_calculate_jaccard(self):
+    def test_calculate_jaccard(self):  #bb
 
         dict1 = {"Pdf1": "Software, open source, bug"}
         dict2 = {"Pdf2": "Hardware, bug, private"}
@@ -85,7 +94,7 @@ class TestClass(unittest.TestCase):
 
         assert calculate_jaccard(dict3) == dict5
 
-    def test_calculate_table_values(self):
+    def test_calculate_table_values(self): #bb
 
         dict1 = {"Pdf1": 0.16666666666666666}
         dict2 = {"Alfredo Di Geronimo": dict1}

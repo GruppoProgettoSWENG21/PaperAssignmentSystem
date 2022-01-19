@@ -17,7 +17,7 @@ from tabulate import tabulate
 from PyPDF2 import PdfFileReader
 
 
-def find_path_for_extraction():
+def find_path_for_extraction(): #pragma no cover
 
     """
         Funzione che mi permette di ottenere il path dove sono presenti i pdf dei possibili revisori e dei pdf da assegnare
@@ -34,7 +34,7 @@ def find_path_for_extraction():
     print("L'utente è: " + username)
 
     if so == "Windows":
-        path = "C:\\Users\\" + username + "\\Desktop\\FilePDF\\"
+        path = "C:\\Users\\" + username + "\\Desktop\\PDFRidotti\\"
         print(path)
     elif so == "Mac OS X":
         path = "/Users/" + username + "/Desktop/FilePDF"
@@ -45,7 +45,8 @@ def find_path_for_extraction():
     return path
 
 
-def text_preproc(x):
+def text_preproc(x): #pragma no cover
+
 
     """
     Preprocessing function
@@ -70,7 +71,7 @@ def text_preproc(x):
     return x
 
 
-def my_tokenizer(text):
+def my_tokenizer(text): #pragma no cover
 
     """
     Tokenization function (funzione che mi permette di eliminare stopwords e effettuare lo stemming)
@@ -88,7 +89,7 @@ def my_tokenizer(text):
     return pruned
 
 
-def create_tokenized_documents(reviewer_dict):
+def create_tokenized_documents(reviewer_dict): #pragma no cover
 
     texts = []
 
@@ -99,7 +100,7 @@ def create_tokenized_documents(reviewer_dict):
     return texts
 
 
-def create_model(vectorizer,texts):
+def create_model(vectorizer,texts): #pragma no cover
 
     """
 
@@ -116,7 +117,7 @@ def create_model(vectorizer,texts):
     return model
 
 
-def cos_similarity(reviewer_dict, input_dict):
+def cos_similarity(reviewer_dict, input_dict): #pragma no cover
     
     """
         Funzione di cosine similarity fatta tra la query e i documenti
@@ -127,11 +128,12 @@ def cos_similarity(reviewer_dict, input_dict):
 
     """
 
-    texts = create_tokenized_documents(reviewer_dict)
+
     values = {}
 
     for pdf in sorted(input_dict.keys()):
         # adds a query to the model
+        texts = create_tokenized_documents(reviewer_dict)
         vectorizer = CountVectorizer(tokenizer=my_tokenizer)
         model = create_model(vectorizer,texts)
         query = vectorizer.transform([input_dict[pdf]])
@@ -223,7 +225,10 @@ def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
 
     return autori_keywords
 
+
+
 if __name__ == '__main__':
+
 
     authors = []
     author_title_abstact = {}
