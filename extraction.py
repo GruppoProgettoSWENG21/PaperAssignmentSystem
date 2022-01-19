@@ -17,7 +17,7 @@ from tabulate import tabulate
 from PyPDF2 import PdfFileReader
 
 
-def find_path_for_extraction():
+def find_path_for_extraction(): #pragma no cover
 
     """
         Funzione che mi permette di ottenere il path dove sono presenti i pdf dei possibili revisori e dei pdf da assegnare
@@ -44,7 +44,7 @@ def find_path_for_extraction():
 
     return path
 
-def text_preproc(x):
+def text_preproc(x): #pragma no cover
 
 
     """
@@ -69,7 +69,7 @@ def text_preproc(x):
 
     return x
 
-def my_tokenizer(text):
+def my_tokenizer(text): #pragma no cover
 
     """
     Tokenization function (funzione che mi permette di eliminare stopwords e effettuare lo stemming)
@@ -86,7 +86,7 @@ def my_tokenizer(text):
               for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
     return pruned
 
-def create_tokenized_documents(reviewer_dict):
+def create_tokenized_documents(reviewer_dict): #pragma no cover
 
     texts = []
 
@@ -96,7 +96,7 @@ def create_tokenized_documents(reviewer_dict):
 
     return texts
 
-def create_model(vectorizer,texts):
+def create_model(vectorizer,texts): #pragma no cover
 
     """
 
@@ -112,7 +112,7 @@ def create_model(vectorizer,texts):
 
     return model
 
-def cos_similarity(reviewer_dict, input_dict):
+def cos_similarity(reviewer_dict, input_dict): #pragama no cover
     
     """
         Funzione di cosine similarity fatta tra la query e i documenti
