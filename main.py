@@ -87,7 +87,7 @@ def setup_driver(autore_to_find):
     return our_driver
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == '__main__':
 
     autori = ["Zhenchang Xing", "Bram Adams", "Kelly Blincoe", "Xin Xia", "Gordon Fraser", "Romain Robbes", "Sven Apel"]
 

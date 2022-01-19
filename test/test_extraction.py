@@ -72,8 +72,8 @@ class TestClass(unittest.TestCase):
         user_choice()
         output2 = get_display_output()
 
-        assert output1 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni /'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione media"]
-        assert output2 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni /'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione valore massimo"]
+        assert output1 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni 'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione media"]
+        assert output2 == ["L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni 'titoli' e 'titoli+abstract'? ", "L'utente ha scelto l'opzione valore massimo"]
 
     def test_calculate_jaccard(self):
 

@@ -184,9 +184,7 @@ def user_choice():
     decision = ''
     # Possibilità di far scegliere all'utente tra valore massimo e media
     while decision != "media" and decision != "valore massimo":
-            decision = input(
-            "L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni /"
-            "'titoli' e 'titoli+abstract'? ").lower()
+            decision = input("L'utente desidera utilizzare la media o il valore massimo per il confronto delle sezioni 'titoli' e 'titoli+abstract'? ").lower()
             if decision != "media" and decision != "valore massimo":
                 print("Input non valido inserire media o valore massimo")
 
