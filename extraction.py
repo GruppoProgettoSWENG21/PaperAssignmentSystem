@@ -216,7 +216,7 @@ def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
 
     return autori_keywords
 
-def extraction(file_output):
+def extraction(file_name,file_output):
 
     titl = re.findall('^.{0,120}', file_output)
     titles[file_name] = titl[0]
@@ -302,7 +302,7 @@ if __name__ == '__main__':
                     file_output = open("output.txt", "r", encoding="utf8").readline()
                     file_output = text_preproc(file_output)
                     try:
-                        title_abstract,titles,keyword = extraction(file_output)
+                        title_abstract,titles,keyword = extraction(file_name,file_output)
                     except:
                         print("Error in filename " + file_name + str(IOError))
                         continue
