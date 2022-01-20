@@ -7,7 +7,7 @@ from mock_test import set_keyboard_input,get_display_output
 
 class TestClass:
 
-    '''
+
     def test_text_preproc(self):
 
         x1 = "xbd"
@@ -44,7 +44,6 @@ class TestClass:
         assert text_preproc(x15) == " "
         assert text_preproc(x16) == " for"
 
-
     def test_my_tokenizer(self):
 
         words1 = 'John goes to school with his friends'
@@ -58,10 +57,6 @@ class TestClass:
         texts = ["Abstract del primo pdf","Abstract del secondo pdf"]
 
         assert create_tokenized_documents(dict1) == texts
-
-    '''
-
-    #black box
 
     def test_jaccard_similarity(self):
         # il test lo vado a fare su una parte del requisito da implementare
