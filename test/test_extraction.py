@@ -7,7 +7,7 @@ from mock_test import set_keyboard_input,get_display_output
 
 class TestClass:
 
-    def test_text_preproc(self): #pragma no cover
+    def test_text_preproc(self):
 
         x1 = "xbd"
         x2 = "xef"
@@ -53,14 +53,14 @@ class TestClass:
 
         assert jaccard_similarity(dict1, dict2) == dict3
 
-    def test_my_tokenizer(self): #pragma no cover
+    def test_my_tokenizer(self):
 
         words1 = 'John goes to school with his friends'
         words2 = ['john', 'goe', 'school', 'friend']
 
         assert my_tokenizer(words1) == words2
 
-    def test_create_tokenized_documents(self): #pragma no cover
+    def test_create_tokenized_documents(self):
 
         dict1 = {"Pdf1": "Abstract del primo pdf", "Pdf2":"Abstract del secondo pdf"}
         texts = ["Abstract del primo pdf","Abstract del secondo pdf"]

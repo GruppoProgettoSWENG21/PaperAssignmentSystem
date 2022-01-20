@@ -17,7 +17,7 @@ from tabulate import tabulate
 from PyPDF2 import PdfFileReader
 
 
-def find_path_for_extraction(): #pragma no cover
+def find_path_for_extraction():
 
     """
         Funzione che mi permette di ottenere il path dove sono presenti i pdf dei possibili revisori e dei pdf da assegnare
@@ -44,7 +44,7 @@ def find_path_for_extraction(): #pragma no cover
 
     return path
 
-def text_preproc(x): #pragma no cover
+def text_preproc(x):
 
 
     """
@@ -69,7 +69,7 @@ def text_preproc(x): #pragma no cover
 
     return x
 
-def my_tokenizer(text): #pragma no cover
+def my_tokenizer(text):
 
     """
     Tokenization function (funzione che mi permette di eliminare stopwords e effettuare lo stemming)
@@ -86,7 +86,7 @@ def my_tokenizer(text): #pragma no cover
               for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
     return pruned
 
-def create_tokenized_documents(reviewer_dict): #pragma no cover
+def create_tokenized_documents(reviewer_dict):
 
     texts = []
 
@@ -96,7 +96,7 @@ def create_tokenized_documents(reviewer_dict): #pragma no cover
 
     return texts
 
-def create_model(vectorizer,texts): #pragma no cover
+def create_model(vectorizer,texts):
 
     """
 
@@ -112,7 +112,7 @@ def create_model(vectorizer,texts): #pragma no cover
 
     return model
 
-def cos_similarity(reviewer_dict, input_dict): #pragama no cover
+def cos_similarity(reviewer_dict, input_dict):
     
     """
         Funzione di cosine similarity fatta tra la query e i documenti
@@ -216,6 +216,60 @@ def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
 
     return autori_keywords
 
+def extraction(file_output):
+
+    titl = re.findall('^.{0,120}', file_output)
+    titles[file_name] = titl[0]
+    if "abstract" in file_output[:1000]:
+        if "keywords" in file_output and not "index terms" in file_output:
+            abstr = re.findall('abstract(.*?)keywords', file_output)
+            title_abstract[file_name] = abstr[0] + titl[0]
+            keyw = re.findall('keywords(.*?)introduction', file_output)
+            keywords[file_name] = keyw[0]
+
+        elif "index terms" in file_output:
+            abstr = re.findall('abstract(.*?)index terms', file_output)
+            title_abstract[file_name] = abstr[0] + titl[0]
+            keyw = re.findall('index terms(.*?)introduction', file_output)
+            keywords[file_name] = keyw[0]
+
+        elif "introduction" in file_output:
+            abstr = re.findall('abstract(.*?)introduction', file_output)
+            title_abstract[file_name] = abstr[0] + titl[0]
+            keywords[file_name] = " "
+
+        else:
+            print("Non funziona")
+            print(file_name)
+
+    elif "summary" in file_output[:1000]:
+        if "keywords" in file_output and not "index terms" in file_output:
+            abstr = re.findall('summary(.*?)keywords', file_output)
+            title_abstract[file_name] = abstr[0] + titl[0]
+            keyw = re.findall('keywords(.*?)introduction', file_output)
+            keywords[file_name] = keyw[0]
+
+        elif "index terms" in file_output:
+            abstr = re.findall('summary(.*?)index terms', file_output)
+            title_abstract[file_name] = abstr[0] + titl[0]
+            keyw = re.findall('index terms(.*?)introduction', file_output)
+            keywords[file_name] = keyw[0]
+
+        elif "introduction" in file_output:
+            abstr = re.findall('summary(.*?)introduction', file_output)
+            title_abstract[file_name] = abstr[0] + titl[0]
+            keywords[file_name] = " "
+
+        else:
+            print("Non trova nulla")
+            print(file_name)
+
+    else:
+        abstr = re.findall('(.*?)introduction', file_output)
+        title_abstract[file_name] = abstr[0] + titl[0]
+        keywords[file_name] = " "
+
+    return title_abstract,titles,keywords
 
 if __name__ == '__main__':
 
@@ -247,59 +301,8 @@ if __name__ == '__main__':
 
                     file_output = open("output.txt", "r", encoding="utf8").readline()
                     file_output = text_preproc(file_output)
-
                     try:
-                        titl = re.findall('^.{0,120}', file_output)
-                        titles[file_name] = titl[0]
-                        if "abstract" in file_output[:1000]:
-                            if "keywords" in file_output and not "index terms" in file_output:
-                                abstr = re.findall('abstract(.*?)keywords', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('keywords(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-
-                            elif "index terms" in file_output:
-                                abstr = re.findall('abstract(.*?)index terms', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('index terms(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-
-                            elif "introduction" in file_output:
-                                abstr = re.findall('abstract(.*?)introduction', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keywords[file_name] = " "
-
-                            else:
-                                print("Non funziona")
-                                print(file_name)
-
-                        elif "summary" in file_output[:1000]:
-                            if "keywords" in file_output and not "index terms" in file_output:
-                                abstr = re.findall('summary(.*?)keywords', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('keywords(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-
-                            elif "index terms" in file_output:
-                                abstr = re.findall('summary(.*?)index terms', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keyw = re.findall('index terms(.*?)introduction', file_output)
-                                keywords[file_name] = keyw[0]
-
-                            elif "introduction" in file_output:
-                                abstr = re.findall('summary(.*?)introduction', file_output)
-                                title_abstract[file_name] = abstr[0] + titl[0]
-                                keywords[file_name] = " "
-
-                            else:
-                                print("Non trova nulla")
-                                print(file_name)
-
-                        else:
-                            abstr = re.findall('(.*?)introduction', file_output)
-                            title_abstract[file_name] = abstr[0] + titl[0]
-                            keywords[file_name] = " "
-
+                        title_abstract,titles,keyword = extraction(file_output)
                     except:
                         print("Error in filename " + file_name + str(IOError))
                         continue
@@ -382,11 +385,11 @@ if __name__ == '__main__':
         for autore in sorted(authors):
             if not "Massimiliano Di Penta" in autore:
                 if decision == "media":
-                    print(autore + " -----> " + str(np.mean(tit_ab[autore][pdf])))
-                    val_tit_tabella.append(float(np.mean(tit_ab[autore][pdf])))
+                    print(autore + " -----> " + str(np.mean(tit[autore][pdf])))
+                    val_tit_tabella.append(float(np.mean(tit[autore][pdf])))
                 elif decision == "valore massimo":
-                    print(autore + " -----> " + str(np.max(tit_ab[autore][pdf])))
-                    val_tit_tabella.append(float(np.max(tit_ab[autore][pdf])))
+                    print(autore + " -----> " + str(np.max(tit[autore][pdf])))
+                    val_tit_tabella.append(float(np.max(tit[autore][pdf])))
         autori_titoli.update({pdf: val_tit_tabella})
         val_tit_tabella = []
 
