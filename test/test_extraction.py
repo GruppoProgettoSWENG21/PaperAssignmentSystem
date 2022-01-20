@@ -7,7 +7,8 @@ from mock_test import set_keyboard_input,get_display_output
 
 class TestClass:
 
-    def test_text_preproc(self): #pragma no cover
+    '''
+    def test_text_preproc(self):
 
         x1 = "xbd"
         x2 = "xef"
@@ -43,8 +44,26 @@ class TestClass:
         assert text_preproc(x15) == " "
         assert text_preproc(x16) == " for"
 
-    def test_jaccard_similarity(self):
 
+    def test_my_tokenizer(self):
+
+        words1 = 'John goes to school with his friends'
+        words2 = ['john', 'goe', 'school', 'friend']
+
+        assert my_tokenizer(words1) == words2
+    
+    def test_create_tokenized_documents(self):
+
+        dict1 = {"Pdf1": "Abstract del primo pdf", "Pdf2":"Abstract del secondo pdf"}
+        texts = ["Abstract del primo pdf","Abstract del secondo pdf"]
+
+        assert create_tokenized_documents(dict1) == texts
+
+    '''
+
+    #black box
+
+    def test_jaccard_similarity(self):
         # il test lo vado a fare su una parte del requisito da implementare
 
         dict1 = {"Pdf1": "Software, open source, bug"}
@@ -56,20 +75,6 @@ class TestClass:
 
         assert jaccard_similarity(dict1, dict2) == dict3
         assert jaccard_similarity(dict4, dict5) == dict6
-
-    def test_my_tokenizer(self): #pragma no cover
-
-        words1 = 'John goes to school with his friends'
-        words2 = ['john', 'goe', 'school', 'friend']
-
-        assert my_tokenizer(words1) == words2
-
-    def test_create_tokenized_documents(self): #pragma no cover
-
-        dict1 = {"Pdf1": "Abstract del primo pdf", "Pdf2":"Abstract del secondo pdf"}
-        texts = ["Abstract del primo pdf","Abstract del secondo pdf"]
-
-        assert create_tokenized_documents(dict1) == texts
 
     def test_user_choice(self):
 
