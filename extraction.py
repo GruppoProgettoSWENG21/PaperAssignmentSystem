@@ -17,7 +17,7 @@ from tabulate import tabulate
 from PyPDF2 import PdfFileReader
 
 
-def find_path_for_extraction():
+def find_path_for_extraction():#pragma no cover
 
     """
         Funzione che mi permette di ottenere il path dove sono presenti i pdf dei possibili revisori e dei pdf da assegnare
@@ -44,7 +44,7 @@ def find_path_for_extraction():
 
     return path
 
-def text_preproc(x):
+def text_preproc(x):#pragma no cover
 
 
     """
@@ -69,7 +69,7 @@ def text_preproc(x):
 
     return x
 
-def my_tokenizer(text):
+def my_tokenizer(text):#pragma no cover
 
     """
     Tokenization function (funzione che mi permette di eliminare stopwords e effettuare lo stemming)
@@ -86,7 +86,7 @@ def my_tokenizer(text):
               for t in tokens if re.search(r"^\w", t) and not t.lower() in sw]
     return pruned
 
-def create_tokenized_documents(reviewer_dict):
+def create_tokenized_documents(reviewer_dict):#pragma no cover
 
     texts = []
 
@@ -96,7 +96,7 @@ def create_tokenized_documents(reviewer_dict):
 
     return texts
 
-def create_model(vectorizer,texts):
+def create_model(vectorizer,texts): #pragma no cover
 
     """
 
@@ -112,7 +112,7 @@ def create_model(vectorizer,texts):
 
     return model
 
-def cos_similarity(reviewer_dict, input_dict):
+def cos_similarity(reviewer_dict, input_dict): #pragma no cover
     
     """
         Funzione di cosine similarity fatta tra la query e i documenti
@@ -199,7 +199,7 @@ def calculate_jaccard(dict_reviewer):
 
     return massimo_keywords
 
-def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
+def calculate_table_values_keywords(pdf_di_penta,massimo_keywords,authors):
 
     autori_keywords = {}
     val_max_keywords_tabella = []
@@ -216,7 +216,7 @@ def calculate_table_values(pdf_di_penta,massimo_keywords,authors):
 
     return autori_keywords
 
-def extraction(file_name,file_output):
+def extraction(file_name,file_output): #pragma no cover
 
     titl = re.findall('^.{0,120}', file_output)
     titles[file_name] = titl[0]
@@ -271,6 +271,29 @@ def extraction(file_name,file_output):
 
     return title_abstract,titles,keywords
 
+def calculate_table_value_abstract_tit_and_tit(pdf_letti,autori_letti,sezione,decision):
+
+    sezione_tit_or_ab = {}
+    val_tit_ab_tabella = []
+
+    for pdf in sorted(pdf_letti):
+        print(pdf)
+        for autore in sorted(autori_letti):
+            if not "Massimiliano Di Penta" in autore:
+                if decision == "media":
+                    print(autore + " -----> " + str(np.mean(sezione[autore][pdf])))
+                    val_tit_ab_tabella.append(float(np.mean(sezione[autore][pdf])))
+                elif decision == "valore massimo":
+                    print(autore + " -----> " + str(np.max(sezione[autore][pdf])))
+                    val_tit_ab_tabella.append(float(np.max(sezione[autore][pdf])))
+        sezione_tit_or_ab.update({pdf: val_tit_ab_tabella})
+        val_tit_ab_tabella = []
+        print("<---------------------------------------------------->")
+
+
+
+    return sezione_tit_or_ab
+
 if __name__ == '__main__':
 
 
@@ -319,6 +342,7 @@ if __name__ == '__main__':
 
     pdf_di_penta = []
     for pdf in sorted(author_titles["Massimiliano Di Penta"].keys()):
+        print(pdf)
         pdf_di_penta.append(pdf)
 
     print("********************************")
@@ -328,7 +352,7 @@ if __name__ == '__main__':
     # 1) utilizzo della funzione jaccard per le KEYWORDS
 
     massimo_keywords = calculate_jaccard(author_keywords)
-    autori_keywords = calculate_table_values(pdf_di_penta,massimo_keywords,authors)
+    autori_keywords = calculate_table_values_keywords(pdf_di_penta,massimo_keywords,authors)
 
 
     print("********************************")
@@ -347,21 +371,8 @@ if __name__ == '__main__':
             tit_ab.update({nome_autore: valori_ab_tit})
 
     autori_tit_ab = {}
-    val_tit_ab_tabella = []
 
-    for pdf in sorted(pdf_di_penta):
-        print(pdf)
-        for autore in sorted(authors):
-            if not "Massimiliano Di Penta" in autore:
-                if decision == "media":
-                    print(autore + " -----> " + str(np.mean(tit_ab[autore][pdf])))
-                    val_tit_ab_tabella.append(float(np.mean(tit_ab[autore][pdf])))
-                elif decision == "valore massimo":
-                    print(autore + " -----> " + str(np.max(tit_ab[autore][pdf])))
-                    val_tit_ab_tabella.append(float(np.max(tit_ab[autore][pdf])))
-        autori_tit_ab.update({pdf: val_tit_ab_tabella})
-        val_tit_ab_tabella = []
-        print("<---------------------------------------------------->")
+    autori_tit_ab = calculate_table_value_abstract_tit_and_tit(pdf_di_penta,authors,tit_ab,decision)
 
     print("********************************")
     print()
@@ -375,23 +386,12 @@ if __name__ == '__main__':
     for nome_autore in sorted(author_titles.keys()):
         if not "Massimiliano Di Penta" in nome_autore:
             valori_tit = cos_similarity(author_titles[nome_autore], author_titles["Massimiliano Di Penta"])
+            print(type(valori_tit["1934a880.pdf"]))
             tit.update({nome_autore: valori_tit})
 
     autori_titoli = {}
-    val_tit_tabella = []
 
-    for pdf in pdf_di_penta:
-        print(pdf)
-        for autore in sorted(authors):
-            if not "Massimiliano Di Penta" in autore:
-                if decision == "media":
-                    print(autore + " -----> " + str(np.mean(tit[autore][pdf])))
-                    val_tit_tabella.append(float(np.mean(tit[autore][pdf])))
-                elif decision == "valore massimo":
-                    print(autore + " -----> " + str(np.max(tit[autore][pdf])))
-                    val_tit_tabella.append(float(np.max(tit[autore][pdf])))
-        autori_titoli.update({pdf: val_tit_tabella})
-        val_tit_tabella = []
+    autori_titoli = calculate_table_value_abstract_tit_and_tit(pdf_di_penta,authors,tit,decision)
 
     print("<---------------------------------------------------->")
 
